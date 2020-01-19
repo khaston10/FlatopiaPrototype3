@@ -1,0 +1,490 @@
+fileFormatVersion: 2
+guid: 481474885503348998d3b2620c12a383
+timeCreated: 1431218915
+licenseType: Store
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: body
+    100004: eye
+    100006: joint1
+    100008: joint10
+    100010: joint11
+    100012: joint12
+    100014: joint13
+    100016: joint14
+    100018: joint15
+    100020: joint16
+    100022: joint17
+    100024: joint18
+    100026: joint19
+    100028: joint2
+    100030: joint20
+    100032: joint22
+    100034: joint23
+    100036: joint24
+    100038: joint25
+    100040: joint26
+    100042: joint27
+    100044: joint28
+    100046: joint3
+    100048: joint4
+    100050: joint5
+    100052: joint6
+    100054: joint7
+    100056: joint8
+    100058: joint9
+    100060: Joints
+    400000: //RootNode
+    400002: body
+    400004: eye
+    400006: joint1
+    400008: joint10
+    400010: joint11
+    400012: joint12
+    400014: joint13
+    400016: joint14
+    400018: joint15
+    400020: joint16
+    400022: joint17
+    400024: joint18
+    400026: joint19
+    400028: joint2
+    400030: joint20
+    400032: joint22
+    400034: joint23
+    400036: joint24
+    400038: joint25
+    400040: joint26
+    400042: joint27
+    400044: joint28
+    400046: joint3
+    400048: joint4
+    400050: joint5
+    400052: joint6
+    400054: joint7
+    400056: joint8
+    400058: joint9
+    400060: Joints
+    2300000: eye
+    3300000: eye
+    4300000: eye
+    4300002: body
+    7400000: walk
+    7400002: idle
+    7400004: lookDown
+    7400006: lookUp
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: body
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: walk
+      takeName: alien-gary-rig-anim
+      firstFrame: 1
+      lastFrame: 23
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: body
+        weight: 1
+      - path: Joints
+        weight: 1
+      - path: Joints/joint15
+        weight: 1
+      - path: Joints/joint15/joint16
+        weight: 1
+      - path: Joints/joint15/joint16/joint17
+        weight: 1
+      - path: Joints/joint18
+        weight: 1
+      - path: Joints/joint18/joint19
+        weight: 1
+      - path: Joints/joint18/joint19/joint20
+        weight: 1
+      - path: Joints/joint22
+        weight: 1
+      - path: Joints/joint22/joint5
+        weight: 1
+      - path: Joints/joint22/joint5/joint6
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/eye
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint1
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint1/joint2
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint3
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint3/joint4
+        weight: 1
+      - path: Joints/joint22/joint12
+        weight: 1
+      - path: Joints/joint22/joint12/joint13
+        weight: 1
+      - path: Joints/joint22/joint12/joint13/joint14
+        weight: 1
+      - path: Joints/joint23
+        weight: 1
+      - path: Joints/joint23/joint24
+        weight: 1
+      - path: Joints/joint23/joint24/joint25
+        weight: 1
+      - path: Joints/joint26
+        weight: 1
+      - path: Joints/joint26/joint27
+        weight: 1
+      - path: Joints/joint26/joint27/joint28
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: idle
+      takeName: alien-gary-rig-anim
+      firstFrame: 25
+      lastFrame: 59
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: body
+        weight: 1
+      - path: Joints
+        weight: 1
+      - path: Joints/joint15
+        weight: 1
+      - path: Joints/joint15/joint16
+        weight: 1
+      - path: Joints/joint15/joint16/joint17
+        weight: 1
+      - path: Joints/joint18
+        weight: 1
+      - path: Joints/joint18/joint19
+        weight: 1
+      - path: Joints/joint18/joint19/joint20
+        weight: 1
+      - path: Joints/joint22
+        weight: 1
+      - path: Joints/joint22/joint5
+        weight: 1
+      - path: Joints/joint22/joint5/joint6
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/eye
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint1
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint1/joint2
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint3
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint3/joint4
+        weight: 1
+      - path: Joints/joint22/joint12
+        weight: 1
+      - path: Joints/joint22/joint12/joint13
+        weight: 1
+      - path: Joints/joint22/joint12/joint13/joint14
+        weight: 1
+      - path: Joints/joint23
+        weight: 1
+      - path: Joints/joint23/joint24
+        weight: 1
+      - path: Joints/joint23/joint24/joint25
+        weight: 1
+      - path: Joints/joint26
+        weight: 1
+      - path: Joints/joint26/joint27
+        weight: 1
+      - path: Joints/joint26/joint27/joint28
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: lookDown
+      takeName: alien-gary-rig-anim
+      firstFrame: 60
+      lastFrame: 85
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: body
+        weight: 1
+      - path: Joints
+        weight: 1
+      - path: Joints/joint15
+        weight: 1
+      - path: Joints/joint15/joint16
+        weight: 1
+      - path: Joints/joint15/joint16/joint17
+        weight: 1
+      - path: Joints/joint18
+        weight: 1
+      - path: Joints/joint18/joint19
+        weight: 1
+      - path: Joints/joint18/joint19/joint20
+        weight: 1
+      - path: Joints/joint22
+        weight: 1
+      - path: Joints/joint22/joint5
+        weight: 1
+      - path: Joints/joint22/joint5/joint6
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/eye
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint1
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint1/joint2
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint3
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint3/joint4
+        weight: 1
+      - path: Joints/joint22/joint12
+        weight: 1
+      - path: Joints/joint22/joint12/joint13
+        weight: 1
+      - path: Joints/joint22/joint12/joint13/joint14
+        weight: 1
+      - path: Joints/joint23
+        weight: 1
+      - path: Joints/joint23/joint24
+        weight: 1
+      - path: Joints/joint23/joint24/joint25
+        weight: 1
+      - path: Joints/joint26
+        weight: 1
+      - path: Joints/joint26/joint27
+        weight: 1
+      - path: Joints/joint26/joint27/joint28
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: lookUp
+      takeName: alien-gary-rig-anim
+      firstFrame: 85
+      lastFrame: 110
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: body
+        weight: 1
+      - path: Joints
+        weight: 1
+      - path: Joints/joint15
+        weight: 1
+      - path: Joints/joint15/joint16
+        weight: 1
+      - path: Joints/joint15/joint16/joint17
+        weight: 1
+      - path: Joints/joint18
+        weight: 1
+      - path: Joints/joint18/joint19
+        weight: 1
+      - path: Joints/joint18/joint19/joint20
+        weight: 1
+      - path: Joints/joint22
+        weight: 1
+      - path: Joints/joint22/joint5
+        weight: 1
+      - path: Joints/joint22/joint5/joint6
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/eye
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint1
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint1/joint2
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint3
+        weight: 1
+      - path: Joints/joint22/joint5/joint6/joint7/joint8/joint9/joint10/joint11/joint3/joint4
+        weight: 1
+      - path: Joints/joint22/joint12
+        weight: 1
+      - path: Joints/joint22/joint12/joint13
+        weight: 1
+      - path: Joints/joint22/joint12/joint13/joint14
+        weight: 1
+      - path: Joints/joint23
+        weight: 1
+      - path: Joints/joint23/joint24
+        weight: 1
+      - path: Joints/joint23/joint24/joint25
+        weight: 1
+      - path: Joints/joint26
+        weight: 1
+      - path: Joints/joint26/joint27
+        weight: 1
+      - path: Joints/joint26/joint27/joint28
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

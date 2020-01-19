@@ -8,11 +8,12 @@ public class MeatEaterContoller : MonoBehaviour
     public int daysSinceLastEaten = 0;
     public Vector3 relativePos;
     public Quaternion rotation;
+    public bool isAwake;
     
 
     public int direction = 0; // 0: Move y+, 1: Move y-, 2: Move x+, 3: Move x-
     private float timer = 0.0f;
-    private Color FedMeatEater = new Color(.55f, .33f, .04f, 1f);
+    private Color FedMeatEater = new Color(.55f, .33f, .9f, 1f);
     public AudioClip EatSound;
 
     // Start is called before the first frame update
@@ -22,6 +23,7 @@ public class MeatEaterContoller : MonoBehaviour
         relativePos = new Vector3(0f, 0f, 0f);
         rotation = new Quaternion(0f, 0f, 0f, 0f);
         GameObject.Find("Game").GetComponent<GameMain>().visionDistance = 5;
+        isAwake = true;
     }
 
     // Update is called once per frame
@@ -34,14 +36,14 @@ public class MeatEaterContoller : MonoBehaviour
         }
 
         // Check to see if it is time to update plant eater's direction.
-        if (timeBetweenDirectionChange < timer)
+        if (timeBetweenDirectionChange < timer && isAwake)
         {
             MeatEaterChangeDirection();
             timer = 0;
         }
 
         // Move plant eater if creatures are awake.
-        if (GameObject.Find("Game").GetComponent<GameMain>().creaturesAwake && GameObject.Find("Game").GetComponent<GameMain>().gamePaused != true 
+        if (isAwake && GameObject.Find("Game").GetComponent<GameMain>().gamePaused != true 
             && GameObject.Find("Game").GetComponent<GameMain>().meatEatersFrozen == false)
         {
             MeatEaterMove();
@@ -114,8 +116,6 @@ public class MeatEaterContoller : MonoBehaviour
             Destroy(col.transform.gameObject);
             daysSinceLastEaten = 0;
             transform.GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = FedMeatEater;
-            transform.GetChild(0).GetChild(2).GetComponent<Renderer>().material.color = FedMeatEater;
-            transform.GetChild(0).GetChild(3).GetComponent<Renderer>().material.color = FedMeatEater;
 
             //Reset the stat used for the ninja achievement.
             GameObject.Find("Game").GetComponent<GameMain>().noPlantEatersKilledForXDays = 0;

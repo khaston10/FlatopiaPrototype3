@@ -10,6 +10,7 @@ public class PlantEaterContoller : MonoBehaviour
     public Vector3 relativePos;
     public Quaternion rotation;
     public int visionDistance;
+    public bool isAwake;
 
     private int direction = 0; // 0: Move y+, 1: Move y-, 2: Move x+, 3: Move x-
     private float timer = 0.0f;
@@ -24,6 +25,7 @@ public class PlantEaterContoller : MonoBehaviour
         relativePos = new Vector3(0f, 0f, 0f);
         rotation = new Quaternion(0f, 0f, 0f, 0f);
         visionDistance = 5;
+        isAwake = true;
    
     }
 
@@ -38,17 +40,17 @@ public class PlantEaterContoller : MonoBehaviour
         }
 
         // Check to see if it is time to update plant eater's direction.
-        if (timeBetweenDirectionChange < timer)
+        if (timeBetweenDirectionChange < timer && isAwake)
         {
             PlantEaterChangeDirection();
             timer = 0;
         }
 
         // Move plant eater if creatures are awake.
-        if (GameObject.Find("Game").GetComponent<GameMain>().creaturesAwake && GameObject.Find("Game").GetComponent<GameMain>().gamePaused != true)
+        if (isAwake && GameObject.Find("Game").GetComponent<GameMain>().gamePaused != true)
         {
             PlantEaterMove();
-        }     
+        }      
     }
 
     public void PlantEaterChangeDirection()

@@ -6,56 +6,54 @@ using UnityEngine.UI;
 
 public class GameMain : MonoBehaviour
 {
-    public bool gameWon;
-    public int worldSize;
-    public int foodSpawned;
+    #region Variables
+
+    #region Plant Eater Variables
     public int plantEaters;
+    public float plantEaterSpeed = .5f; // Set to .5 in normal speed and 2 for Fast Forward mode.
+    public float caffeinePlantEaterSpeed = 1.5f; // Set to 1.5 in normal speed and 6 for Fast Forward mode.
+    public int visionDistance = 5;
+    public int MeatEaterVisionDistanceLevel = 1; // This should max out at 5.
+    public List<Transform> plantEaterList;
+    public Transform plantEater;
+    public List<Vector3> plantEaterStartPositions;
+    public int noPlantEatersKilledForXDays = 0;
+    #endregion
+
+    #region Meat Eater Variables
     public int meatEaters;
-    public int meatEaterSpawnAmount = 2;
-    public int gamePoints;
     public int daysBetweenMeatEaterSpawn;
+    public int meatEaterSpawnAmount = 2;
     public int daysUntilMeatEaterStarves;
     public int meaterEaterSpawnCounter = 0;
-    public bool creaturesAwake = true;
-    public bool gamePaused = false;
+    public bool meatEatersSpawnDisabled = false; // This is used to temporaly disable meat eater spawn when user kills meat eaters.
+    public float meatEaterSpeed = .5f; // Set to .5 in normal speed and 2 for Fast Forward mode. Then upped by .5 for each level.
+    public int meatEaterSpeedLevel = 1; // This should max out at 5.
+    private int daysUntilMeatEaterCounter;
+    public Transform meatEater;
+    private int randomMeatEaterUpgrade = 0;
+    public List<Transform> meatEaterList;
+    #endregion
+
+    #region Food Variables
+    public Transform food;
+    public List<Vector3> foodPositions;
+    public List<Transform> foodList;
+    #endregion
+
+    #region Upgrade Variables
     public bool slayerUpgradeUnlocked = false;
     public bool freezeUpgradeUnlocked = false;
     public bool feedUpgradeUnlocked = false;
     public bool caffeineUpgradeUnlocked = false;
+
     public bool caffeineSpeedOn = false;
     public bool meatEatersFrozen = false;
-    public bool meatEatersSpawnDisabled = false; // This is used to temporaly disable meat eater spawn when user kills meat eaters.
-    public float plantEaterSpeed = .5f; // Set to .5 in normal speed and 2 for Fast Forward mode.
-    public float caffeinePlantEaterSpeed = 1.5f; // Set to 1.5 in normal speed and 6 for Fast Forward mode.
-    public float meatEaterSpeed = .5f; // Set to .5 in normal speed and 2 for Fast Forward mode. Then upped by .5 for each level.
-    public int meatEaterSpeedLevel = 1; // This should max out at 5.
-    public int visionDistance = 5;
-    public int MeatEaterVisionDistanceLevel = 1; // This should max out at 5.
 
-    public float slowSpeedMeter = .0005f; // Set to .0005 in normal speed and .002 for Fast Forward mode.
-    public float medSpeedMeter = .001f; // Set to .001 in normal speed and .004 for Fast Forward mode.
-    public Light star1;
-    public Text GameSpeedDisplayText;
-    public Text gamePointsText;
-    public Text worldSizeText;
-    public Text foodSpawnedText;
-    public Text PlantEatersText;
-    public Text dayCountText;
-    public Transform planet1;
-    public Animator planetAnimator;
-    public Transform star1Body;
-    public Animator starAnimator;
-    public Transform food;
-    public Transform plantEater;
-    public Transform meatEater;
-    public List<Vector3> foodPositions;
-    public List<Vector3> plantEaterStartPositions;
-    public List<Transform> foodList;
-    public List<Transform> plantEaterList;
-    public List<Transform> meatEaterList;
-    public int noPlantEatersKilledForXDays = 0;
-    private int worldSizeLimit = 30;
 
+    #endregion
+
+    #region Acheivment Variables
     public RawImage landOwnerImage;
     public Texture landOwnerTexture;
     public bool landOwnerAchievement;
@@ -74,57 +72,24 @@ public class GameMain : MonoBehaviour
     public RawImage unlockedImage;
     public Texture unlockedTexture;
     public bool unlockedAchievement;
-    public Slider slayerSlider;
-    public Slider freezeSlider;
-    public Slider feedSlider;
-    public Slider caffeineSlider;
-    public Text slayerSliderText;
-    public Text freezeSliderText;
-    public Text feedSliderText;
-    public Text caffeineSliderText;
-    public Text daysUntilMeatEatersText;
-    public Text researchPointsText;
-    private int daysUntilMeatEaterCounter;
-    private int randomMeatEaterUpgrade = 0;
+    #endregion
+
+    #region Main Variables
+    public bool gameWon;
+    public int worldSize;
+    public int foodSpawned;
+    public int gamePoints;
+    public bool creaturesAwake = true;
+    public bool gamePaused = false;
+    public float slowSpeedMeter = .0005f; // Set to .0005 in normal speed and .002 for Fast Forward mode.
+    public float medSpeedMeter = .001f; // Set to .001 in normal speed and .004 for Fast Forward mode.
+    public Light star1;
+    public Transform planet1;
+    public Animator planetAnimator;
+    public Transform star1Body;
+    public Animator starAnimator;
+    private int worldSizeLimit = 30;
     public int researchPoints = 0;
-
-
-    // Sounds to play depending on state of game.
-    public AudioClip buttonDoesNotWork;
-    public AudioClip upgradeUnlocked;
-    public AudioClip plantEaterDie;
-    public AudioClip meatEaterDie;
-    public AudioClip achievementUnlocked;
-
-    // Buttons for upgrade.
-    public Button slayerButton;
-    public Button freezeButton;
-    public Button feedButton;
-    public Button caffeineButton;
-    public Button advancedUpgradeButton;
-    public GameObject advancedUpgradePanel;
-    public GameObject settingsPanel;
-
-    // Bools to keep track of advanced upgrades. Bools that are not being used yet have been commented out.
-    public bool s1Unlocked = false;
-    public bool s2Unlocked = false;
-    //private bool s3Unlocked = false;
-    //private bool s4Unlocked = false;
-    //private bool s5Unlocked = false;
-    public bool m1Unlocked = false;
-    public bool m2Unlocked = false;
-    //private bool m3Unlocked = false;
-    //private bool m4Unlocked = false;
-    //private bool m5Unlocked = false;
-
-    // Buttons from Control Panel
-    public Button foodSpawnButton;
-    public Button worldSizeButton;
-    public Button plantEaterButton;
-
-
-
-
     //------------------------------------This code is used for debugging, remove before release.--------------------
     public bool foodOn = true;
     public bool movePlanetOn = true;
@@ -146,16 +111,67 @@ public class GameMain : MonoBehaviour
     private float planetYPos;
     private float planetZPos;
     private float planetXPos;
+    public GameObject settingsPanel;
+
+    // Buttons from Control Panel
+    public Button foodSpawnButton;
+    public Button worldSizeButton;
+    public Button plantEaterButton;
+    #endregion
+
+    #region Text Variables
+    public Text GameSpeedDisplayText;
+    public Text gamePointsText;
+    public Text worldSizeText;
+    public Text foodSpawnedText;
+    public Text PlantEatersText;
+    public Text dayCountText;
+    public Text slayerSliderText;
+    public Text freezeSliderText;
+    public Text feedSliderText;
+    public Text caffeineSliderText;
+    public Text daysUntilMeatEatersText;
+    public Text researchPointsText;
+
+    #endregion
+
+    #region Outposts
+    // Bools to keep track of advanced upgrades. Bools that are not being used yet have been commented out.
+    public bool s1Unlocked = false;
+    public bool s2Unlocked = false;
+    //private bool s3Unlocked = false;
+    //private bool s4Unlocked = false;
+    //private bool s5Unlocked = false;
+    public bool m1Unlocked = false;
+    public bool m2Unlocked = false;
+    //private bool m3Unlocked = false;
+    //private bool m4Unlocked = false;
+    //private bool m5Unlocked = false;
+    #endregion
+
+    #region Audio Variables
+    // Sounds to play depending on state of game.
+    public AudioClip buttonDoesNotWork;
+    public AudioClip upgradeUnlocked;
+    public AudioClip plantEaterDie;
+    public AudioClip meatEaterDie;
+    public AudioClip achievementUnlocked;
+    #endregion
+
+    #region Color Variables
     private Color starvingPlantEater = new Color(.8f, .7f, .3f, .1f);
     private Color starvingMeatEater = new Color(.8f, .7f, .3f, .1f);
     private Color frozenMeatEater = new Color(.1f, .1f, .1f, .5f);
     private Color FedPlantEater = new Color(.1f, 1f, .1f, 1f);
     private Color CafeinePlantEater = new Color(1f, .1f, .1f, 1f);
+    #endregion
 
+    #endregion
 
     // Start is called before the first frame update
     void Start()
     {
+        #region Load Data
         worldSize = GlobalControl.Instance.worldSize;
         foodSpawned = GlobalControl.Instance.foodSpawned;
         plantEaters = GlobalControl.Instance.plantEaters;
@@ -168,28 +184,22 @@ public class GameMain : MonoBehaviour
         survivalistAchievement = GlobalControl.Instance.survivalistAchievement;
         glutonAchievement = GlobalControl.Instance.glutonAchievement;
         unlockedAchievement = GlobalControl.Instance.unlockedAchievement;
+        #endregion
 
-        // Set sliders, buttons and panels as invisible
-        slayerSlider.gameObject.SetActive(false);
-        freezeSlider.gameObject.SetActive(false);
-        feedSlider.gameObject.SetActive(false);
-        caffeineSlider.gameObject.SetActive(false);
-        advancedUpgradePanel.SetActive(false);
-        advancedUpgradeButton.gameObject.SetActive(false);
-
-
+        #region Set Objects Active/Inactive
         daysUntilMeatEaterCounter = daysBetweenMeatEaterSpawn;
         daysUntilMeatEatersText.text = daysUntilMeatEaterCounter.ToString() + " Days";
         daysUntilMeatEaterCounter -= 1;
+        #endregion
 
-
+        #region Populate World
         // Populate the positions list with all possible positions for grids.
         for (int i = 0; i < worldSize; i++)
         {
             for (int j = 0; j < worldSize; j++)
             {
                 Vector3 foodPos = new Vector3(i, 1f, j);
-                Vector3 plantEaterPos = new Vector3(i, 1.4f, j);
+                Vector3 plantEaterPos = new Vector3(i, 1.2f, j);
                 foodPositions.Add(foodPos);
                 plantEaterStartPositions.Add(plantEaterPos);
             }
@@ -207,7 +217,7 @@ public class GameMain : MonoBehaviour
             foodPositions.RemoveAt(randPos);
             foodList.Add(f);
         }
-
+        #endregion
     }
 
     // Update is called once per frame
@@ -221,13 +231,14 @@ public class GameMain : MonoBehaviour
             
         }
 
-
+        #region Get User Input
         // Get Keyboard Inputs.
         if (Input.GetKeyDown(KeyCode.Alpha1)) foodSpawnButton.onClick.Invoke();
         if (Input.GetKeyDown(KeyCode.Alpha2)) worldSizeButton.onClick.Invoke();
         if (Input.GetKeyDown(KeyCode.Alpha3)) plantEaterButton.onClick.Invoke();
+        #endregion
 
-
+        #region Update Objects
         //------------------------------------This code is used for debugging, remove before release.--------------------
         if (foodOn == false)
         {
@@ -322,50 +333,22 @@ public class GameMain : MonoBehaviour
         // Update sliders and turn off if they are full.
         if (slayerUpgradeUnlocked)
         {
-            if (slayerSlider.value < 10) slayerSlider.value += slowSpeedMeter;
-            else if (slayerSlider.isActiveAndEnabled)
-            {
-                AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
-                slayerSlider.gameObject.SetActive(false);
 
-                ChangeButtonColor(slayerButton, Color.green);
-            }
         }
 
         if (freezeUpgradeUnlocked)
         {
-            if (freezeSlider.value < 10) freezeSlider.value += medSpeedMeter;
-            else if (freezeSlider.isActiveAndEnabled)
-            {
-                AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
-                freezeSlider.gameObject.SetActive(false);
-
-                ChangeButtonColor(freezeButton, Color.green);
-            }
+          
         }
 
         if (feedUpgradeUnlocked)
         {
-            if (feedSlider.value < 10) feedSlider.value += medSpeedMeter;
-            else if (feedSlider.isActiveAndEnabled)
-            {
-                AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
-                feedSlider.gameObject.SetActive(false);
-
-                ChangeButtonColor(feedButton, Color.green);
-            }
+            
         }
 
         if (caffeineUpgradeUnlocked)
         {
-            if (caffeineSlider.value < 10) caffeineSlider.value += medSpeedMeter;
-            else if (caffeineSlider.isActiveAndEnabled)
-            {
-                AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
-                caffeineSlider.gameObject.SetActive(false);
-
-                ChangeButtonColor(caffeineButton, Color.green);
-            }
+            
         }
 
 
@@ -375,11 +358,39 @@ public class GameMain : MonoBehaviour
         if (timer >= (lengthOfDay / 2) && creaturesAwake == true)
         {
             creaturesAwake = false;
+
+            // Play the Idle Animation for plant eaters.
+            for (int i = 0; i < plantEaterList.Count; i++)
+            {
+                plantEaterList[i].GetComponent<PlantEaterContoller>().isAwake = false;
+                plantEaterList[i].GetChild(0).GetComponent<Animation>().Play("idle");
+            }
+
+            // Play the Idle animation for meat eaters.
+            for (int i = 0; i < meatEaterList.Count; i++)
+            {
+                meatEaterList[i].GetComponent<MeatEaterContoller>().isAwake = false;
+                meatEaterList[i].GetChild(0).GetComponent<Animation>().Play("wait");
+            }
         }
 
         else if (timer < (lengthOfDay / 2) && creaturesAwake == false)
         {
             creaturesAwake = true;
+
+            // Play the Walk Animation for plant eaters.
+            for (int i = 0; i < plantEaterList.Count; i++)
+            {
+                plantEaterList[i].GetComponent<PlantEaterContoller>().isAwake = true;
+                plantEaterList[i].GetChild(0).GetComponent<Animation>().Play("walk");
+            }
+
+            // Play the Walk animation for meat eaters.
+            for (int i = 0; i < meatEaterList.Count; i++)
+            {
+                meatEaterList[i].GetComponent<MeatEaterContoller>().isAwake = true;
+                meatEaterList[i].GetChild(0).GetComponent<Animation>().Play("walk");
+            }
         }
 
         // Update planet positions.
@@ -430,7 +441,9 @@ public class GameMain : MonoBehaviour
             yPos = worldSize * Mathf.Sin(timerSpeedCoefficient * timer);
         xPos = worldSize * Mathf.Cos(timerSpeedCoefficient * timer) + worldSize / 2;
         star1.transform.position = new Vector3(xPos, yPos, worldSize / 2);
+        #endregion
 
+        #region Take Care of End Of Day
         // Take care of end of day tasks.
         if (timer >= lengthOfDay)
         {
@@ -595,8 +608,10 @@ public class GameMain : MonoBehaviour
             }
 
         }
+        #endregion
     }
 
+    #region Functions
     // Save data to Global Control
     public void SaveData()
     {
@@ -799,12 +814,10 @@ public class GameMain : MonoBehaviour
 
     public void ClickSlayerUpgrade()
     {
-        if (slayerUpgradeUnlocked && slayerSlider.value > 9)
+        if (slayerUpgradeUnlocked)
         {
-            ChangeButtonColor(slayerButton, Color.red);
+            //ChangeButtonColor(slayerButton, Color.red);
 
-            // Set the slider back to visible.
-            slayerSlider.gameObject.SetActive(true);
 
             AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
 
@@ -824,8 +837,6 @@ public class GameMain : MonoBehaviour
             }
             meatEaterList.Clear();
 
-            // Reset slider.
-            slayerSlider.value = 0f;
 
             // Set the bool to false so that meat eaters do not come back immediately.
             meatEatersSpawnDisabled = true;
@@ -836,7 +847,6 @@ public class GameMain : MonoBehaviour
 
         else if (slayerUpgradeUnlocked == false && gamePoints >= 30)
         {
-            ChangeButtonColor(slayerButton, Color.red);
 
             AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
             // Make the cost text invisible.
@@ -858,7 +868,6 @@ public class GameMain : MonoBehaviour
             }
             meatEaterList.Clear();
 
-            slayerSlider.gameObject.SetActive(true);
             slayerUpgradeUnlocked = true;
             gamePoints -= 30;
 
@@ -873,7 +882,6 @@ public class GameMain : MonoBehaviour
                 AudioSource.PlayClipAtPoint(achievementUnlocked, transform.position);
                 unlockedAchievement = true;
 
-                if (advancedUpgradeButton.isActiveAndEnabled == false) advancedUpgradeButton.gameObject.SetActive(true);
             }
         }
 
@@ -883,19 +891,12 @@ public class GameMain : MonoBehaviour
 
     public void ClickFreezeUpgrade()
     {
-        if (freezeUpgradeUnlocked && freezeSlider.value > 9 && creaturesAwake)
+        if (freezeUpgradeUnlocked && creaturesAwake)
         {
-            ChangeButtonColor(freezeButton, Color.red);
-
-            // Set the slider back to visible.
-            freezeSlider.gameObject.SetActive(true);
 
             AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
             // Set the freeze bool for meat eaters.
             meatEatersFrozen = true;
-
-            // Reset slider.
-            freezeSlider.value = 0f;
 
             // Change skin color.
             for (int i = 0; i < meatEaterList.Count; i++)
@@ -908,7 +909,6 @@ public class GameMain : MonoBehaviour
 
         else if (freezeUpgradeUnlocked == false && gamePoints >= 20 && creaturesAwake)
         {
-            ChangeButtonColor(freezeButton, Color.red);
 
             AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
             // Make the cost text invisible.
@@ -917,7 +917,6 @@ public class GameMain : MonoBehaviour
             // Set the freeze bool for meat eaters.
             meatEatersFrozen = true;
 
-            freezeSlider.gameObject.SetActive(true);
             freezeUpgradeUnlocked = true;
             gamePoints -= 20;
 
@@ -937,8 +936,6 @@ public class GameMain : MonoBehaviour
                 unlockedImage.texture = unlockedTexture;
                 AudioSource.PlayClipAtPoint(achievementUnlocked, transform.position);
                 unlockedAchievement = true;
-
-                if (advancedUpgradeButton.isActiveAndEnabled == false) advancedUpgradeButton.gameObject.SetActive(true);
             }
         }
 
@@ -947,16 +944,10 @@ public class GameMain : MonoBehaviour
 
     public void ClickFeedUpgrade()
     {
-        if (feedUpgradeUnlocked && feedSlider.value > 9)
+        if (feedUpgradeUnlocked)
         {
-            ChangeButtonColor(feedButton, Color.red);
-
-            // Set the slider back to visible.
-            feedSlider.gameObject.SetActive(true);
-
             AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
-            // Reset slider.
-            feedSlider.value = 0f;
+
 
             // Feed all plant eaters and change their skin color.
             for (int i = 0; i < plantEaterList.Count; i++)
@@ -969,7 +960,6 @@ public class GameMain : MonoBehaviour
 
         else if (feedUpgradeUnlocked == false && gamePoints >= 20)
         {
-            ChangeButtonColor(feedButton, Color.red);
 
             AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
             // Make the cost text invisible.
@@ -982,7 +972,6 @@ public class GameMain : MonoBehaviour
                 plantEaterList[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = FedPlantEater;
             }
 
-            feedSlider.gameObject.SetActive(true);
             feedUpgradeUnlocked = true;
             gamePoints -= 20;
 
@@ -993,8 +982,6 @@ public class GameMain : MonoBehaviour
                 unlockedImage.texture = unlockedTexture;
                 AudioSource.PlayClipAtPoint(achievementUnlocked, transform.position);
                 unlockedAchievement = true;
-
-                if (advancedUpgradeButton.isActiveAndEnabled == false) advancedUpgradeButton.gameObject.SetActive(true);
             }
 
         }
@@ -1004,17 +991,9 @@ public class GameMain : MonoBehaviour
 
     public void ClickCaffeineUpgrade()
     {
-        if (caffeineUpgradeUnlocked && caffeineSlider.value > 9 && creaturesAwake)
+        if (caffeineUpgradeUnlocked)
         {
-
-            ChangeButtonColor(caffeineButton, Color.red);
-
-            // Set the slider back to visible.
-            caffeineSlider.gameObject.SetActive(true);
-
             AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
-            // Reset slider.
-            caffeineSlider.value = 0f;
 
             // Set caffeine speed on;
             caffeineSpeedOn = true;
@@ -1029,13 +1008,11 @@ public class GameMain : MonoBehaviour
 
         else if (caffeineUpgradeUnlocked == false && gamePoints >= 10)
         {
-            ChangeButtonColor(caffeineButton, Color.red);
 
             AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
             // Make the cost text invisible.
             caffeineSliderText.text = "";
 
-            caffeineSlider.gameObject.SetActive(true);
             caffeineUpgradeUnlocked = true;
             gamePoints -= 10;
 
@@ -1049,8 +1026,6 @@ public class GameMain : MonoBehaviour
                 unlockedImage.texture = unlockedTexture;
                 AudioSource.PlayClipAtPoint(achievementUnlocked, transform.position);
                 unlockedAchievement = true;
-
-                if (advancedUpgradeButton.isActiveAndEnabled == false) advancedUpgradeButton.gameObject.SetActive(true);
             }
 
             // Change the skin color of the plant Eaters.
@@ -1068,11 +1043,6 @@ public class GameMain : MonoBehaviour
         but.GetComponent<Image>().color = color;
     }
 
-    public void ClickAdvancedUpgrade()
-    {
-        if (settingsPanel.activeInHierarchy == false) advancedUpgradePanel.SetActive(true);
-    }
-
     public void UpdateResearchPoints()
     {
         if (s1Unlocked)
@@ -1081,4 +1051,5 @@ public class GameMain : MonoBehaviour
 
         }
     }
+    #endregion
 }
