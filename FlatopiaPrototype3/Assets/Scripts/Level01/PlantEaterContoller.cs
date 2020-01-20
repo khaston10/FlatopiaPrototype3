@@ -14,6 +14,7 @@ public class PlantEaterContoller : MonoBehaviour
 
     private int direction = 0; // 0: Move y+, 1: Move y-, 2: Move x+, 3: Move x-
     private float timer = 0.0f;
+    private Animation anim;
     
 
 
@@ -26,6 +27,10 @@ public class PlantEaterContoller : MonoBehaviour
         rotation = new Quaternion(0f, 0f, 0f, 0f);
         visionDistance = 5;
         isAwake = true;
+
+        // Set Walk Animation to correct speed.
+        anim = transform.GetChild(0).GetComponent<Animation>();
+        anim["walk"].speed = 2;
    
     }
 

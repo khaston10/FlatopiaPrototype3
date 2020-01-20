@@ -18,6 +18,7 @@ public class GameMain : MonoBehaviour
     public Transform plantEater;
     public List<Vector3> plantEaterStartPositions;
     public int noPlantEatersKilledForXDays = 0;
+    public Animation anim;
     #endregion
 
     #region Meat Eater Variables
@@ -50,6 +51,33 @@ public class GameMain : MonoBehaviour
     public bool caffeineSpeedOn = false;
     public bool meatEatersFrozen = false;
 
+    public Button UGSlot1;
+    public Button UGSlot2;
+    public Button UGSlot3;
+    public Button UGSlot4;
+
+    public RawImage UGSlot1Image;
+    public RawImage UGSlot2Image;
+    public RawImage UGSlot3Image;
+    public RawImage UGSlot4Image;
+
+    public Texture[] UGTextures;
+
+    private float slayerTimer;
+    private float freezeTimer;
+    private float feedTimer;
+    private float caffeineTimer;
+
+    private int slayerTimerReset = 10;
+    private int freezeTimerReset = 10;
+    private int feedTimerReset = 10;
+    private int caffeineTimerReset = 10;
+
+    // int 4 means not active, 0: slayer, 1: freeze, 2: feed, 3: caffeine.
+    public int UGSlot1Active;
+    public int UGSlot2Active;
+    public int UGSlot3Active;
+    public int UGSlot4Active;
 
     #endregion
 
@@ -190,6 +218,12 @@ public class GameMain : MonoBehaviour
         daysUntilMeatEaterCounter = daysBetweenMeatEaterSpawn;
         daysUntilMeatEatersText.text = daysUntilMeatEaterCounter.ToString() + " Days";
         daysUntilMeatEaterCounter -= 1;
+
+        UGSlot1Image.enabled = false;
+        UGSlot2Image.enabled = false;
+        UGSlot3Image.enabled = false;
+        UGSlot4Image.enabled = false;
+
         #endregion
 
         #region Populate World
@@ -330,29 +364,11 @@ public class GameMain : MonoBehaviour
         PlantEatersText.text = plantEaters.ToString();
         dayCountText.text = day.ToString();
 
-        // Update sliders and turn off if they are full.
-        if (slayerUpgradeUnlocked)
-        {
-
-        }
-
-        if (freezeUpgradeUnlocked)
-        {
-          
-        }
-
-        if (feedUpgradeUnlocked)
-        {
-            
-        }
-
-        if (caffeineUpgradeUnlocked)
-        {
-            
-        }
-
-
-
+        // Update Upgrade Timers
+        slayerTimer += Time.deltaTime;
+        freezeTimer += Time.deltaTime;
+        feedTimer += Time.deltaTime;
+        caffeineTimer += Time.deltaTime;
 
         // Check to see if creatures should be awake or asleep.
         if (timer >= (lengthOfDay / 2) && creaturesAwake == true)
@@ -360,18 +376,10 @@ public class GameMain : MonoBehaviour
             creaturesAwake = false;
 
             // Play the Idle Animation for plant eaters.
-            for (int i = 0; i < plantEaterList.Count; i++)
-            {
-                plantEaterList[i].GetComponent<PlantEaterContoller>().isAwake = false;
-                plantEaterList[i].GetChild(0).GetComponent<Animation>().Play("idle");
-            }
+            PlayPlanetEaterAnimation("idle");
 
             // Play the Idle animation for meat eaters.
-            for (int i = 0; i < meatEaterList.Count; i++)
-            {
-                meatEaterList[i].GetComponent<MeatEaterContoller>().isAwake = false;
-                meatEaterList[i].GetChild(0).GetComponent<Animation>().Play("wait");
-            }
+            PlayMeatEaterAnimation("wait");
         }
 
         else if (timer < (lengthOfDay / 2) && creaturesAwake == false)
@@ -379,18 +387,10 @@ public class GameMain : MonoBehaviour
             creaturesAwake = true;
 
             // Play the Walk Animation for plant eaters.
-            for (int i = 0; i < plantEaterList.Count; i++)
-            {
-                plantEaterList[i].GetComponent<PlantEaterContoller>().isAwake = true;
-                plantEaterList[i].GetChild(0).GetComponent<Animation>().Play("walk");
-            }
+            PlayPlanetEaterAnimation("walk");
 
             // Play the Walk animation for meat eaters.
-            for (int i = 0; i < meatEaterList.Count; i++)
-            {
-                meatEaterList[i].GetComponent<MeatEaterContoller>().isAwake = true;
-                meatEaterList[i].GetChild(0).GetComponent<Animation>().Play("walk");
-            }
+            PlayMeatEaterAnimation("walk");
         }
 
         // Update planet positions.
@@ -814,10 +814,8 @@ public class GameMain : MonoBehaviour
 
     public void ClickSlayerUpgrade()
     {
-        if (slayerUpgradeUnlocked)
+        if (slayerUpgradeUnlocked && slayerTimer > slayerTimerReset)
         {
-            //ChangeButtonColor(slayerButton, Color.red);
-
 
             AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
 
@@ -841,48 +839,9 @@ public class GameMain : MonoBehaviour
             // Set the bool to false so that meat eaters do not come back immediately.
             meatEatersSpawnDisabled = true;
 
-            
+            // reset timer.
+            slayerTimer = 0;
 
-        }
-
-        else if (slayerUpgradeUnlocked == false && gamePoints >= 30)
-        {
-
-            AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
-            // Make the cost text invisible.
-            slayerSliderText.text = "";
-
-            // Check to see if genocide achievement is unlocked.
-            if (meatEaterList.Count >= 5)
-            {
-                AudioSource.PlayClipAtPoint(achievementUnlocked, transform.position);
-                genocideImage.color = Color.white;
-                genocideImage.texture = genocideTexture;
-                genocideAchievement = true;
-            }
-
-            // Kill meat eaters.
-            for (int i = 0; i < meatEaterList.Count; i++)
-            {
-                Destroy(meatEaterList[i].gameObject);
-            }
-            meatEaterList.Clear();
-
-            slayerUpgradeUnlocked = true;
-            gamePoints -= 30;
-
-            // Set the bool to false so that meat eaters do not come back immediately.
-            meatEatersSpawnDisabled = true;
-
-            // Check to see if all achievements are unlocked.
-            if (caffeineUpgradeUnlocked && feedUpgradeUnlocked && freezeUpgradeUnlocked && slayerUpgradeUnlocked && unlockedAchievement == false)
-            {
-                unlockedImage.color = Color.white;
-                unlockedImage.texture = unlockedTexture;
-                AudioSource.PlayClipAtPoint(achievementUnlocked, transform.position);
-                unlockedAchievement = true;
-
-            }
         }
 
         else AudioSource.PlayClipAtPoint(buttonDoesNotWork, transform.position);
@@ -891,7 +850,7 @@ public class GameMain : MonoBehaviour
 
     public void ClickFreezeUpgrade()
     {
-        if (freezeUpgradeUnlocked && creaturesAwake)
+        if (freezeUpgradeUnlocked && creaturesAwake && freezeTimer > freezeTimerReset)
         {
 
             AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
@@ -905,38 +864,9 @@ public class GameMain : MonoBehaviour
                 meatEaterList[i].GetChild(0).GetChild(2).GetComponent<Renderer>().material.color = frozenMeatEater;
                 meatEaterList[i].GetChild(0).GetChild(3).GetComponent<Renderer>().material.color = frozenMeatEater;
             }
-        }
 
-        else if (freezeUpgradeUnlocked == false && gamePoints >= 20 && creaturesAwake)
-        {
-
-            AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
-            // Make the cost text invisible.
-            freezeSliderText.text = "";
-
-            // Set the freeze bool for meat eaters.
-            meatEatersFrozen = true;
-
-            freezeUpgradeUnlocked = true;
-            gamePoints -= 20;
-
-            // Change skin color.
-            for (int i = 0; i < meatEaterList.Count; i++)
-            {
-                meatEaterList[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = frozenMeatEater;
-                meatEaterList[i].GetChild(0).GetChild(2).GetComponent<Renderer>().material.color = frozenMeatEater;
-                meatEaterList[i].GetChild(0).GetChild(3).GetComponent<Renderer>().material.color = frozenMeatEater;
-
-            }
-
-            // Check to see if all achievements are unlocked.
-            if (caffeineUpgradeUnlocked && feedUpgradeUnlocked && freezeUpgradeUnlocked && slayerUpgradeUnlocked && unlockedAchievement == false)
-            {
-                unlockedImage.color = Color.white;
-                unlockedImage.texture = unlockedTexture;
-                AudioSource.PlayClipAtPoint(achievementUnlocked, transform.position);
-                unlockedAchievement = true;
-            }
+            //Reset Timer.
+            freezeTimer = 0;
         }
 
         else AudioSource.PlayClipAtPoint(buttonDoesNotWork, transform.position);
@@ -944,7 +874,7 @@ public class GameMain : MonoBehaviour
 
     public void ClickFeedUpgrade()
     {
-        if (feedUpgradeUnlocked)
+        if (feedUpgradeUnlocked && feedTimer > feedTimerReset)
         {
             AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
 
@@ -956,42 +886,18 @@ public class GameMain : MonoBehaviour
                 plantEaterList[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = FedPlantEater;
             }
 
-        }
-
-        else if (feedUpgradeUnlocked == false && gamePoints >= 20)
-        {
-
-            AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
-            // Make the cost text invisible.
-            feedSliderText.text = "";
-
-            // Feed all plant eaters and change their skin color.
-            for (int i = 0; i < plantEaterList.Count; i++)
-            {
-                plantEaterList[i].GetComponent<PlantEaterContoller>().foodEaten += 1;
-                plantEaterList[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = FedPlantEater;
-            }
-
-            feedUpgradeUnlocked = true;
-            gamePoints -= 20;
-
-            // Check to see if all achievements are unlocked.
-            if (caffeineUpgradeUnlocked && feedUpgradeUnlocked && freezeUpgradeUnlocked && slayerUpgradeUnlocked && unlockedAchievement == false)
-            {
-                unlockedImage.color = Color.white;
-                unlockedImage.texture = unlockedTexture;
-                AudioSource.PlayClipAtPoint(achievementUnlocked, transform.position);
-                unlockedAchievement = true;
-            }
+            //Reset Timer.
+            feedTimer = 0;
 
         }
+
         else AudioSource.PlayClipAtPoint(buttonDoesNotWork, transform.position);
 
     }
 
     public void ClickCaffeineUpgrade()
     {
-        if (caffeineUpgradeUnlocked)
+        if (caffeineUpgradeUnlocked && caffeineTimer > caffeineTimerReset)
         {
             AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
 
@@ -999,43 +905,14 @@ public class GameMain : MonoBehaviour
             caffeineSpeedOn = true;
 
             // Change the skin color of the plant Eaters.
-            for (int i = 0; i < plantEaterList.Count; i++)
-            {
-                plantEaterList[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = CafeinePlantEater;
-            }
+            ChangePlantEaterSkin(CafeinePlantEater);
 
+            // Reset Timer.
+            caffeineTimer = 0;
         }
 
-        else if (caffeineUpgradeUnlocked == false && gamePoints >= 10)
-        {
-
-            AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
-            // Make the cost text invisible.
-            caffeineSliderText.text = "";
-
-            caffeineUpgradeUnlocked = true;
-            gamePoints -= 10;
-
-            // Set caffeine speed on;
-            caffeineSpeedOn = true;
-
-            // Check to see if all achievements are unlocked.
-            if (caffeineUpgradeUnlocked && feedUpgradeUnlocked && freezeUpgradeUnlocked && slayerUpgradeUnlocked && unlockedAchievement == false)
-            {
-                unlockedImage.color = Color.white;
-                unlockedImage.texture = unlockedTexture;
-                AudioSource.PlayClipAtPoint(achievementUnlocked, transform.position);
-                unlockedAchievement = true;
-            }
-
-            // Change the skin color of the plant Eaters.
-            for (int i = 0; i < plantEaterList.Count; i++)
-            {
-                plantEaterList[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = CafeinePlantEater;
-            }
-
-        }
         else AudioSource.PlayClipAtPoint(buttonDoesNotWork, transform.position);
+
     }
 
     public void ChangeButtonColor(Button but, Color color)
@@ -1049,6 +926,173 @@ public class GameMain : MonoBehaviour
         {
             researchPointsText.text = researchPoints.ToString();
 
+        }
+    }
+
+    public void ChangePlantEaterSkin(Color color)
+    {
+        for (int i = 0; i < plantEaterList.Count; i++)
+        {
+            plantEaterList[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = color;
+        }
+    }
+
+    public void PlayPlanetEaterAnimation(string animationName)
+    {
+        if (animationName == "idle")
+        {
+            for (int i = 0; i < plantEaterList.Count; i++)
+            {
+                plantEaterList[i].GetComponent<PlantEaterContoller>().isAwake = false;
+                plantEaterList[i].GetChild(0).GetComponent<Animation>().Play("idle");
+            }
+        }
+
+        else if (animationName == "walk")
+        {
+            for (int i = 0; i < plantEaterList.Count; i++)
+            {
+                anim = plantEaterList[i].GetChild(0).GetComponent<Animation>();
+                anim[animationName].speed = 2;
+                plantEaterList[i].GetComponent<PlantEaterContoller>().isAwake = true;
+                plantEaterList[i].GetChild(0).GetComponent<Animation>().Play("walk");
+            }
+        }
+        
+    }
+
+    public void PlayMeatEaterAnimation(string animationName)
+    {
+        if (animationName == "wait")
+        {
+            for (int i = 0; i < meatEaterList.Count; i++)
+            {
+                meatEaterList[i].GetComponent<MeatEaterContoller>().isAwake = false;
+                meatEaterList[i].GetChild(0).GetComponent<Animation>().Play("wait");
+            }
+        }
+
+        else if (animationName == "walk")
+        {
+            for (int i = 0; i < meatEaterList.Count; i++)
+            {
+                meatEaterList[i].GetComponent<MeatEaterContoller>().isAwake = true;
+                meatEaterList[i].GetChild(0).GetComponent<Animation>().Play("walk");
+            }
+        }
+    }
+
+    public void UpgradesUpdated(int upgrade)
+    {
+        // Check to see if there is an open slot.
+        if(UGSlot1Active == 4)
+        {
+            UGSlot1Active = upgrade;
+            UGSlot1Image.enabled = true;
+            UGSlot1Image.texture = UGTextures[upgrade];
+        }
+
+        else if (UGSlot2Active == 4)
+        {
+            UGSlot2Active = upgrade;
+            UGSlot2Image.enabled = true;
+            UGSlot2Image.texture = UGTextures[upgrade];
+        }
+
+        else if (UGSlot3Active == 4)
+        {
+            UGSlot3Active = upgrade;
+            UGSlot3Image.enabled = true;
+            UGSlot3Image.texture = UGTextures[upgrade];
+        }
+
+        else if (UGSlot4Active == 4)
+        {
+            UGSlot4Active = upgrade;
+            UGSlot4Image.enabled = true;
+            UGSlot4Image.texture = UGTextures[upgrade];
+        }
+    }
+
+    public void ClickUpgrade(int slot)
+    {
+        if (slot == 1)
+        {
+            if(UGSlot1Active == 0)
+            {
+                ClickSlayerUpgrade();
+            }
+            else if(UGSlot1Active == 1)
+            {
+                ClickFreezeUpgrade();
+            }
+            else if(UGSlot1Active == 2)
+            {
+                ClickFeedUpgrade();
+            }
+            else if (UGSlot1Active == 3){
+                ClickCaffeineUpgrade();
+            }
+        }
+
+        else if (slot == 2)
+        {
+            if (UGSlot2Active == 0)
+            {
+                ClickSlayerUpgrade();
+            }
+            else if (UGSlot2Active == 1)
+            {
+                ClickFreezeUpgrade();
+            }
+            else if (UGSlot2Active == 2)
+            {
+                ClickFeedUpgrade();
+            }
+            else if (UGSlot2Active == 3)
+            {
+                ClickCaffeineUpgrade();
+            }
+        }
+
+        else if (slot == 3)
+        {
+            if (UGSlot3Active == 0)
+            {
+                ClickSlayerUpgrade();
+            }
+            else if (UGSlot3Active == 1)
+            {
+                ClickFreezeUpgrade();
+            }
+            else if (UGSlot3Active == 2)
+            {
+                ClickFeedUpgrade();
+            }
+            else if (UGSlot3Active == 3)
+            {
+                ClickCaffeineUpgrade();
+            }
+        }
+
+        else if (slot == 4)
+        {
+            if (UGSlot4Active == 0)
+            {
+                ClickSlayerUpgrade();
+            }
+            else if (UGSlot4Active == 1)
+            {
+                ClickFreezeUpgrade();
+            }
+            else if (UGSlot4Active == 2)
+            {
+                ClickFeedUpgrade();
+            }
+            else if (UGSlot4Active == 3)
+            {
+                ClickCaffeineUpgrade();
+            }
         }
     }
     #endregion
