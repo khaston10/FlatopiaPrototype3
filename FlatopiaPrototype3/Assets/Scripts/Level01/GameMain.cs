@@ -51,10 +51,8 @@ public class GameMain : MonoBehaviour
     public bool caffeineSpeedOn = false;
     public bool meatEatersFrozen = false;
 
-    public Button UGSlot1;
-    public Button UGSlot2;
-    public Button UGSlot3;
-    public Button UGSlot4;
+    // This array will be the buttons the user clicks to use upgrades. index = 0 will represent slot 1 and index = 1: slots 2...
+    public Button[] UGSlots;
 
     public RawImage UGSlot1Image;
     public RawImage UGSlot2Image;
@@ -73,11 +71,17 @@ public class GameMain : MonoBehaviour
     private int feedTimerReset = 10;
     private int caffeineTimerReset = 10;
 
-    // int 4 means not active, 0: slayer, 1: freeze, 2: feed, 3: caffeine.
-    public int UGSlot1Active;
-    public int UGSlot2Active;
-    public int UGSlot3Active;
-    public int UGSlot4Active;
+    // This array will repsent which UG slot is holding which upgrade. The first int in the array represents slot 1. A value of 0 means Slayer.
+    // int 4 means not active, 0: slayer, 1: freeze, 2: feed, 3: caffeine. So an array of [0, 3, 3, 4] would mean Slot 1 has slayer, 2 and 3 have
+    // caffeine and 4 has not been assigned.
+    public int[] UGSlotsActive;
+
+    // These bools are used when the slot has a upgrade in it but is not available for use. i.e. between uses
+    public bool UGSlayerIsAvailable = true;
+    public bool UGFreezeIsAvailable;
+    public bool UGFeedIsAvailable;
+    public bool UGCaffeineIsAvailable;
+
 
     #endregion
 
@@ -189,9 +193,10 @@ public class GameMain : MonoBehaviour
     #region Color Variables
     private Color starvingPlantEater = new Color(.8f, .7f, .3f, .1f);
     private Color starvingMeatEater = new Color(.8f, .7f, .3f, .1f);
-    private Color frozenMeatEater = new Color(.1f, .1f, .1f, .5f);
+    private Color frozenMeatEater = new Color(.1f, .7f, .1f, .1f);
     private Color FedPlantEater = new Color(.1f, 1f, .1f, 1f);
     private Color CafeinePlantEater = new Color(1f, .1f, .1f, 1f);
+    private Color GreyTrans = new Color(.3f, .3f, .3f, .3f);
     #endregion
 
     #endregion
@@ -364,7 +369,38 @@ public class GameMain : MonoBehaviour
         PlantEatersText.text = plantEaters.ToString();
         dayCountText.text = day.ToString();
 
-        // Update Upgrade Timers
+        // Update Upgrade Timers and set upgrades avaliable.
+        if (UGSlayerIsAvailable == false && slayerTimer > slayerTimerReset)
+        {
+            UGSlayerIsAvailable = true;
+            // Find which slot it is in so the button's color can be changed.
+            ChangeButtonColor(UGSlots[System.Array.IndexOf(UGSlotsActive, 0)], Color.white);
+            AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
+        }
+
+        if (UGFreezeIsAvailable == false && freezeTimer > freezeTimerReset)
+        {
+            UGFreezeIsAvailable = true;
+            // Find which slot it is in so the button's color can be changed.
+            ChangeButtonColor(UGSlots[System.Array.IndexOf(UGSlotsActive, 1)], Color.white);
+            AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
+        }
+
+        if (UGFeedIsAvailable == false && feedTimer > feedTimerReset)
+        {
+            UGFeedIsAvailable = true;
+            // Find which slot it is in so the button's color can be changed.
+            ChangeButtonColor(UGSlots[System.Array.IndexOf(UGSlotsActive, 2)], Color.white);
+            AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
+        }
+
+        if (UGCaffeineIsAvailable == false && caffeineTimer > caffeineTimerReset)
+        {
+            UGCaffeineIsAvailable = true;
+            // Find which slot it is in so the button's color can be changed.
+            ChangeButtonColor(UGSlots[System.Array.IndexOf(UGSlotsActive, 3)], Color.white);
+            AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
+        }
         slayerTimer += Time.deltaTime;
         freezeTimer += Time.deltaTime;
         feedTimer += Time.deltaTime;
@@ -817,7 +853,8 @@ public class GameMain : MonoBehaviour
         if (slayerUpgradeUnlocked && slayerTimer > slayerTimerReset)
         {
 
-            AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
+            //AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
+            AudioSource.PlayClipAtPoint(buttonDoesNotWork, Vector3.zero);
 
             // Check to see if genocide achievement is unlocked.
             if (meatEaterList.Count >= 5)
@@ -844,7 +881,7 @@ public class GameMain : MonoBehaviour
 
         }
 
-        else AudioSource.PlayClipAtPoint(buttonDoesNotWork, transform.position);
+        else AudioSource.PlayClipAtPoint(buttonDoesNotWork, Vector3.zero);
 
     }
 
@@ -853,30 +890,24 @@ public class GameMain : MonoBehaviour
         if (freezeUpgradeUnlocked && creaturesAwake && freezeTimer > freezeTimerReset)
         {
 
-            AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
+            AudioSource.PlayClipAtPoint(buttonDoesNotWork, Vector3.zero);
             // Set the freeze bool for meat eaters.
             meatEatersFrozen = true;
 
-            // Change skin color.
-            for (int i = 0; i < meatEaterList.Count; i++)
-            {
-                meatEaterList[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = frozenMeatEater;
-                meatEaterList[i].GetChild(0).GetChild(2).GetComponent<Renderer>().material.color = frozenMeatEater;
-                meatEaterList[i].GetChild(0).GetChild(3).GetComponent<Renderer>().material.color = frozenMeatEater;
-            }
+            ChangeMeatEaterSkin(frozenMeatEater);
 
             //Reset Timer.
             freezeTimer = 0;
         }
 
-        else AudioSource.PlayClipAtPoint(buttonDoesNotWork, transform.position);
+        else AudioSource.PlayClipAtPoint(buttonDoesNotWork, Vector3.zero);
     }
 
     public void ClickFeedUpgrade()
     {
         if (feedUpgradeUnlocked && feedTimer > feedTimerReset)
         {
-            AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
+            AudioSource.PlayClipAtPoint(buttonDoesNotWork, Vector3.zero);
 
 
             // Feed all plant eaters and change their skin color.
@@ -891,7 +922,7 @@ public class GameMain : MonoBehaviour
 
         }
 
-        else AudioSource.PlayClipAtPoint(buttonDoesNotWork, transform.position);
+        else AudioSource.PlayClipAtPoint(buttonDoesNotWork, Vector3.zero);
 
     }
 
@@ -899,7 +930,7 @@ public class GameMain : MonoBehaviour
     {
         if (caffeineUpgradeUnlocked && caffeineTimer > caffeineTimerReset)
         {
-            AudioSource.PlayClipAtPoint(upgradeUnlocked, transform.position);
+            AudioSource.PlayClipAtPoint(buttonDoesNotWork, Vector3.zero);
 
             // Set caffeine speed on;
             caffeineSpeedOn = true;
@@ -911,7 +942,7 @@ public class GameMain : MonoBehaviour
             caffeineTimer = 0;
         }
 
-        else AudioSource.PlayClipAtPoint(buttonDoesNotWork, transform.position);
+        else AudioSource.PlayClipAtPoint(buttonDoesNotWork, Vector3.zero);
 
     }
 
@@ -934,6 +965,14 @@ public class GameMain : MonoBehaviour
         for (int i = 0; i < plantEaterList.Count; i++)
         {
             plantEaterList[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = color;
+        }
+    }
+
+    public void ChangeMeatEaterSkin(Color color)
+    {
+        for (int i = 0; i < meatEaterList.Count; i++)
+        {
+            meatEaterList[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = color;
         }
     }
 
@@ -984,31 +1023,37 @@ public class GameMain : MonoBehaviour
 
     public void UpgradesUpdated(int upgrade)
     {
-        // Check to see if there is an open slot.
-        if(UGSlot1Active == 4)
+        // Check to see if the upgrade is already in a slot.
+        for (int i = 0; i < UGSlotsActive.Length; i++)
         {
-            UGSlot1Active = upgrade;
+            if (upgrade == UGSlotsActive[i]) return;
+        }
+
+        // Check to see if there is an open slot.
+        if(UGSlotsActive[0] == 4)
+        {
+            UGSlotsActive[0] = upgrade;
             UGSlot1Image.enabled = true;
             UGSlot1Image.texture = UGTextures[upgrade];
         }
 
-        else if (UGSlot2Active == 4)
+        else if (UGSlotsActive[1] == 4)
         {
-            UGSlot2Active = upgrade;
+            UGSlotsActive[1] = upgrade;
             UGSlot2Image.enabled = true;
             UGSlot2Image.texture = UGTextures[upgrade];
         }
 
-        else if (UGSlot3Active == 4)
+        else if (UGSlotsActive[2] == 4)
         {
-            UGSlot3Active = upgrade;
+            UGSlotsActive[2] = upgrade;
             UGSlot3Image.enabled = true;
             UGSlot3Image.texture = UGTextures[upgrade];
         }
 
-        else if (UGSlot4Active == 4)
+        else if (UGSlotsActive[3] == 4)
         {
-            UGSlot4Active = upgrade;
+            UGSlotsActive[3] = upgrade;
             UGSlot4Image.enabled = true;
             UGSlot4Image.texture = UGTextures[upgrade];
         }
@@ -1018,80 +1063,135 @@ public class GameMain : MonoBehaviour
     {
         if (slot == 1)
         {
-            if(UGSlot1Active == 0)
+            if(UGSlotsActive[0] == 0 && UGSlayerIsAvailable)
             {
                 ClickSlayerUpgrade();
+                UGSlayerIsAvailable = false;
+                slayerTimer = 0;
+                ChangeButtonColor(UGSlots[0], GreyTrans);
             }
-            else if(UGSlot1Active == 1)
+            else if(UGSlotsActive[0] == 1 && UGFreezeIsAvailable && creaturesAwake)
             {
                 ClickFreezeUpgrade();
+                UGFreezeIsAvailable = false;
+                freezeTimer = 0;
+                ChangeButtonColor(UGSlots[0], GreyTrans);
             }
-            else if(UGSlot1Active == 2)
+            else if(UGSlotsActive[0] == 2 && UGFeedIsAvailable && creaturesAwake)
             {
                 ClickFeedUpgrade();
+                UGFeedIsAvailable = false;
+                feedTimer = 0;
+                ChangeButtonColor(UGSlots[0], GreyTrans);
             }
-            else if (UGSlot1Active == 3){
+            else if (UGSlotsActive[0] == 3 && UGCaffeineIsAvailable && creaturesAwake)
+            {
                 ClickCaffeineUpgrade();
+                UGCaffeineIsAvailable = false;
+                caffeineTimer = 0;
+                ChangeButtonColor(UGSlots[0], GreyTrans);
             }
         }
 
         else if (slot == 2)
         {
-            if (UGSlot2Active == 0)
+            if (UGSlotsActive[1] == 0 && UGSlayerIsAvailable)
             {
                 ClickSlayerUpgrade();
+                UGSlayerIsAvailable = false;
+                slayerTimer = 0;
+                ChangeButtonColor(UGSlots[1], GreyTrans);
             }
-            else if (UGSlot2Active == 1)
+            else if (UGSlotsActive[1] == 1 && UGFreezeIsAvailable && creaturesAwake)
             {
                 ClickFreezeUpgrade();
+                UGFreezeIsAvailable = false;
+                freezeTimer = 0;
+                ChangeButtonColor(UGSlots[1], GreyTrans);
             }
-            else if (UGSlot2Active == 2)
+            else if (UGSlotsActive[1] == 2 && UGFeedIsAvailable && creaturesAwake)
             {
                 ClickFeedUpgrade();
+                ClickFeedUpgrade();
+                ClickFeedUpgrade();
+                UGFeedIsAvailable = false;
+                feedTimer = 0;
+                ChangeButtonColor(UGSlots[1], GreyTrans);
             }
-            else if (UGSlot2Active == 3)
+            else if (UGSlotsActive[1] == 3 && UGCaffeineIsAvailable && creaturesAwake)
             {
                 ClickCaffeineUpgrade();
+                UGCaffeineIsAvailable = false;
+                caffeineTimer = 0;
+                ChangeButtonColor(UGSlots[1], GreyTrans);
             }
         }
 
         else if (slot == 3)
         {
-            if (UGSlot3Active == 0)
+            if (UGSlotsActive[2] == 0 && UGSlayerIsAvailable)
             {
                 ClickSlayerUpgrade();
+                UGSlayerIsAvailable = false;
+                slayerTimer = 0;
+                ChangeButtonColor(UGSlots[2], GreyTrans);
             }
-            else if (UGSlot3Active == 1)
+            else if (UGSlotsActive[2] == 1 && UGFreezeIsAvailable && creaturesAwake)
             {
                 ClickFreezeUpgrade();
+                UGFreezeIsAvailable = false;
+                freezeTimer = 0;
+                ChangeButtonColor(UGSlots[2], GreyTrans);
             }
-            else if (UGSlot3Active == 2)
+            else if (UGSlotsActive[2] == 2 && UGFeedIsAvailable && creaturesAwake)
             {
                 ClickFeedUpgrade();
+                ClickFeedUpgrade();
+                ClickFeedUpgrade();
+                UGFeedIsAvailable = false;
+                feedTimer = 0;
+                ChangeButtonColor(UGSlots[2], GreyTrans);
             }
-            else if (UGSlot3Active == 3)
+            else if (UGSlotsActive[2] == 3 && UGCaffeineIsAvailable && creaturesAwake)
             {
                 ClickCaffeineUpgrade();
+                UGCaffeineIsAvailable = false;
+                caffeineTimer = 0;
+                ChangeButtonColor(UGSlots[2], GreyTrans);
             }
         }
 
         else if (slot == 4)
         {
-            if (UGSlot4Active == 0)
+            if (UGSlotsActive[3] == 0 && UGSlayerIsAvailable)
             {
                 ClickSlayerUpgrade();
+                UGSlayerIsAvailable = false;
+                slayerTimer = 0;
+                ChangeButtonColor(UGSlots[3], GreyTrans);
             }
-            else if (UGSlot4Active == 1)
+            else if (UGSlotsActive[3] == 1 && UGFreezeIsAvailable && creaturesAwake)
             {
                 ClickFreezeUpgrade();
+                UGFreezeIsAvailable = false;
+                freezeTimer = 0;
+                ChangeButtonColor(UGSlots[3], GreyTrans);
             }
-            else if (UGSlot4Active == 2)
+            else if (UGSlotsActive[3] == 2 && UGFeedIsAvailable && creaturesAwake)
             {
                 ClickFeedUpgrade();
+                ClickFeedUpgrade();
+                ClickFeedUpgrade();
+                UGFeedIsAvailable = false;
+                feedTimer = 0;
+                ChangeButtonColor(UGSlots[3], GreyTrans);
             }
-            else if (UGSlot4Active == 3)
+            else if (UGSlotsActive[3] == 3 && UGCaffeineIsAvailable && creaturesAwake)
             {
                 ClickCaffeineUpgrade();
+                UGCaffeineIsAvailable = false;
+                caffeineTimer = 0;
+                ChangeButtonColor(UGSlots[3], GreyTrans);
             }
         }
     }

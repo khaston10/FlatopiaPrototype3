@@ -357,7 +357,7 @@ GameObject:
   - component: {fileID: 26660080}
   - component: {fileID: 26660079}
   m_Layer: 5
-  m_Name: UGSlot4
+  m_Name: UGSlot3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -376,7 +376,7 @@ RectTransform:
   m_Children:
   - {fileID: 25824909}
   m_Father: {fileID: 1918157630}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -432,7 +432,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 4
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2612,24 +2612,26 @@ MonoBehaviour:
   feedUpgradeUnlocked: 0
   caffeineUpgradeUnlocked: 0
   caffeineSpeedOn: 0
-  meatEatersFrozen: 0
-  UGSlot1: {fileID: 1997334019}
-  UGSlot2: {fileID: 111369875}
-  UGSlot3: {fileID: 1923891774}
-  UGSlot4: {fileID: 26660079}
+  meatEatersFrozen: 1
+  UGSlots:
+  - {fileID: 1997334019}
+  - {fileID: 111369875}
+  - {fileID: 26660079}
+  - {fileID: 1923891774}
   UGSlot1Image: {fileID: 603357843}
   UGSlot2Image: {fileID: 423896431}
-  UGSlot3Image: {fileID: 104347394}
-  UGSlot4Image: {fileID: 25824910}
+  UGSlot3Image: {fileID: 25824910}
+  UGSlot4Image: {fileID: 104347394}
   UGTextures:
   - {fileID: 2800000, guid: b9802e8eaa4a54a4599a3d5782c6811d, type: 3}
   - {fileID: 2800000, guid: b0afc6b0e9a3799469a662ad895fb6e0, type: 3}
   - {fileID: 2800000, guid: a124fbf02e06cdc438120f8c342809fa, type: 3}
   - {fileID: 2800000, guid: 70615ec438e7d564085a4110f50ff029, type: 3}
-  UGSlot1Active: 4
-  UGSlot2Active: 4
-  UGSlot3Active: 4
-  UGSlot4Active: 4
+  UGSlotsActive: 04000000040000000400000004000000
+  UGSlayerIsAvailable: 1
+  UGFreezeIsAvailable: 1
+  UGFeedIsAvailable: 1
+  UGCaffeineIsAvailable: 1
   landOwnerImage: {fileID: 554674041}
   landOwnerTexture: {fileID: 2800000, guid: 48f57060d791b24439998fe8b9dc9374, type: 3}
   landOwnerAchievement: 0
@@ -7214,6 +7216,17 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 579968904}
         m_MethodName: ClickGotIt
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1303729046}
+        m_MethodName: Play
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -13255,6 +13268,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1303729046}
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1264120355
 GameObject:
   m_ObjectHideFlags: 0
@@ -14346,6 +14370,17 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 579968903}
         m_MethodName: ExitPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 572449331}
+        m_MethodName: Play
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -16085,6 +16120,17 @@ MonoBehaviour:
       - m_Target: {fileID: 579968903}
         m_MethodName: SetResolution
         m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1303729046}
+        m_MethodName: Play
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -18086,6 +18132,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 572449331}
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1828208858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19194,8 +19251,8 @@ RectTransform:
   m_Children:
   - {fileID: 1997334018}
   - {fileID: 111369874}
-  - {fileID: 1923891773}
   - {fileID: 26660078}
+  - {fileID: 1923891773}
   m_Father: {fileID: 1080864921}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -19250,7 +19307,7 @@ GameObject:
   - component: {fileID: 1923891775}
   - component: {fileID: 1923891774}
   m_Layer: 5
-  m_Name: UGSlot3
+  m_Name: UGSlot4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19269,7 +19326,7 @@ RectTransform:
   m_Children:
   - {fileID: 104347393}
   m_Father: {fileID: 1918157630}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -19325,7 +19382,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
+          m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -19723,6 +19780,17 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 579968904}
         m_MethodName: ClickNo
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 572449331}
+        m_MethodName: Play
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -21000,6 +21068,17 @@ MonoBehaviour:
       - m_Target: {fileID: 579968903}
         m_MethodName: SetQuality
         m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1303729046}
+        m_MethodName: Play
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
