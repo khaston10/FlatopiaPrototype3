@@ -18,6 +18,7 @@ public class GlobalControl : MonoBehaviour
     public bool unlockedAchievement;
     public bool gameWon;
     public int day;
+    public int peakPop;
 
     private void Awake()
     {

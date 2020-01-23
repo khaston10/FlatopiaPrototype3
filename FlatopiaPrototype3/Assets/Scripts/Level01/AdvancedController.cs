@@ -21,6 +21,7 @@ public class AdvancedController : MonoBehaviour
     #region Texts
     public Text UpgradeText;
     public Text AchievementText;
+    public Text RegionText;
 
     #endregion
 
@@ -136,6 +137,16 @@ public class AdvancedController : MonoBehaviour
         else if (achievementNumber == 3) AchievementText.text = "LAND-OWNER:\nWorld size of 30 or more.";
         else if (achievementNumber == 4) AchievementText.text = "GLUTON:\n1 Plant-Eater eats 5 or more plants in 1 day.";
         else if (achievementNumber == 5) AchievementText.text = "UNLOCKED:\nAll other achievments unlocked.";
+    }
+
+    #endregion
+
+    #region Region Functions
+
+    public void ClickRegion(int regionNum)
+    {
+        //0: Plains, 1: Desert, 2: Jungle, 3: Tundra
+        GameObject.Find("Game").GetComponent<GameMain>().RegionUpdate(regionNum);
     }
 
     #endregion

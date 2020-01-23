@@ -106,6 +106,16 @@ public class GameMain : MonoBehaviour
     public bool unlockedAchievement;
     #endregion
 
+    #region Region Variables
+
+    // This is an array of buttons - 0: Region1 (Forest), 1: Region2 (Desert), 2: Region3 (Jungle), 3: Region4 (Tundra)
+    public Button[] regionButtons;
+
+    // This is an array of booleans with information about which region is active.
+    public bool[] regionIsActive;
+
+    #endregion
+
     #region Main Variables
     public bool gameWon;
     public int worldSize;
@@ -122,6 +132,7 @@ public class GameMain : MonoBehaviour
     public Animator starAnimator;
     private int worldSizeLimit = 30;
     public int researchPoints = 0;
+    public int PeakPop = 0;
     //------------------------------------This code is used for debugging, remove before release.--------------------
     public bool foodOn = true;
     public bool movePlanetOn = true;
@@ -164,6 +175,7 @@ public class GameMain : MonoBehaviour
     public Text caffeineSliderText;
     public Text daysUntilMeatEatersText;
     public Text researchPointsText;
+    public Text peakPopText;
 
     #endregion
 
@@ -657,12 +669,14 @@ public class GameMain : MonoBehaviour
         GlobalControl.Instance.gamePoints = gamePoints;
         GlobalControl.Instance.gameWon = gameWon; ;
         GlobalControl.Instance.day = day;
+        GlobalControl.Instance.peakPop = PeakPop;
         GlobalControl.Instance.landOwnerAchievement = landOwnerAchievement;
         GlobalControl.Instance.ninjaAchievement = ninjaAchievement;
         GlobalControl.Instance.genocideAchievement = genocideAchievement;
         GlobalControl.Instance.glutonAchievement = glutonAchievement;
         GlobalControl.Instance.unlockedAchievement = unlockedAchievement;
         GlobalControl.Instance.survivalistAchievement = survivalistAchievement;
+        
     }
 
     // This section handles buttons on screen.
@@ -845,6 +859,13 @@ public class GameMain : MonoBehaviour
         {
             gamePoints -= 1;
             plantEaters += 1;
+
+            // Check to see if new Peak Population has been reached.
+            if (plantEaters > PeakPop)
+            {
+                PeakPop = plantEaters;
+                peakPopText.text = PeakPop.ToString();
+            }
         }
     }
 
@@ -1194,6 +1215,16 @@ public class GameMain : MonoBehaviour
                 ChangeButtonColor(UGSlots[3], GreyTrans);
             }
         }
+    }
+
+    public void RegionUpdate(int regionNum)
+    {
+        if (regionIsActive[regionNum] == false)
+        {
+            regionIsActive[regionNum] = true;
+            ChangeButtonColor(regionButtons[regionNum], Color.white);
+        }
+        
     }
     #endregion
 }

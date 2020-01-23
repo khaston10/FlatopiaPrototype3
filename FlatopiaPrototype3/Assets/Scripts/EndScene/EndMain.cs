@@ -9,12 +9,14 @@ public class EndMain : MonoBehaviour
     public bool gameWon;
     public int worldSize;
     public int day;
+    public int peakPop;
     public bool landOwnerAchievement;
     public bool genocideAchievement;
     public bool ninjaAchievement;
     public bool survivalistAchievement;
     public bool glutonAchievement;
     public bool unlockedAchievement;
+    
 
     public RawImage landOwnerImage;
     public Texture landOwnerTexture;
@@ -31,12 +33,14 @@ public class EndMain : MonoBehaviour
     public Text dayText;
     public Text titleText;
     public Text bodyText;
+    public Text peakPopText;
 
     // Start is called before the first frame update
     void Start()
     {
         worldSize = GlobalControl.Instance.worldSize;
         day = GlobalControl.Instance.day;
+        peakPop = GlobalControl.Instance.peakPop;
         gameWon = GlobalControl.Instance.gameWon;
         landOwnerAchievement = GlobalControl.Instance.landOwnerAchievement;
         genocideAchievement = GlobalControl.Instance.genocideAchievement;
@@ -46,6 +50,7 @@ public class EndMain : MonoBehaviour
         unlockedAchievement = GlobalControl.Instance.unlockedAchievement;
 
         dayText.text = day.ToString();
+        peakPopText.text = peakPop.ToString();
 
         if (gameWon)
         {
