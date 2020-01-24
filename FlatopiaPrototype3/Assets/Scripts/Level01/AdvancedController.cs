@@ -147,6 +147,7 @@ public class AdvancedController : MonoBehaviour
     {
         //0: Plains, 1: Desert, 2: Jungle, 3: Tundra
         GameObject.Find("Game").GetComponent<GameMain>().RegionUpdate(regionNum);
+        GameObject.Find("Grid").GetComponent<CreateGrid>().CreateNewRegion(regionNum);
     }
 
     #endregion

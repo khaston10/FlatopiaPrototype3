@@ -114,6 +114,8 @@ public class GameMain : MonoBehaviour
     // This is an array of booleans with information about which region is active.
     public bool[] regionIsActive;
 
+    public int region2WorldSize;
+
     #endregion
 
     #region Main Variables
@@ -811,34 +813,20 @@ public class GameMain : MonoBehaviour
 
     public void ClickWorldSize()
     {
-        if (gamePoints > 0 && worldSize < worldSizeLimit)
+        if (gamePoints > 0 && worldSize < worldSizeLimit && GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[0].enabled == true)
         {
             gamePoints -= 1;  
             worldSize += 1;
             GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateGrid();
-            GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateCameraPos();
+            GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateCameraPos(0);
+        }
 
-            // Update the position of the Military Outpost.
-            if (m1Unlocked && m2Unlocked == false)
-            {
-                GameObject.Find("MilitaryOutpost(Clone)").GetComponent<MilitaryOutpost>().UpdateOutpostPosition();
-            }
-
-            else if (m2Unlocked)
-            {
-                GameObject.Find("MilitaryOutpost2(Clone)").GetComponent<MilitaryOutpost>().UpdateOutpostPosition();
-            }
-
-            // Update the position of the Science Outpost.
-            if (s1Unlocked && s2Unlocked == false)
-            {
-                GameObject.Find("ScienceOutpost(Clone)").GetComponent<ScienceOutpost>().UpdateOutpostPosition();
-            }
-
-            else if (s2Unlocked)
-            {
-                GameObject.Find("ScienceOutpost2(Clone)").GetComponent<ScienceOutpost>().UpdateOutpostPosition();
-            }
+        else if (gamePoints > 0 && region2WorldSize < worldSizeLimit && GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[1].enabled == true)
+        {
+            gamePoints -= 1;
+            region2WorldSize += 1;
+            GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateGridRegion2();
+            GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateCameraPos(1);
         }
 
         // Check to see if the Land Owner achievement is unlocked.
@@ -1224,7 +1212,15 @@ public class GameMain : MonoBehaviour
             regionIsActive[regionNum] = true;
             ChangeButtonColor(regionButtons[regionNum], Color.white);
         }
-        
+    }
+
+    public void ClickRegionButton(int regionNum)
+    {
+        if (regionIsActive[regionNum])
+        {
+            GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateRegionActive(regionNum);
+        }
+
     }
     #endregion
 }
