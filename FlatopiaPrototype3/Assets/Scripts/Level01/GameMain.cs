@@ -39,7 +39,17 @@ public class GameMain : MonoBehaviour
     #region Food Variables
     public Transform food;
     public List<Vector3> foodPositions;
+    public List<Vector3> region2FoodPositions;
+    public List<Vector3> region3FoodPositions;
+    public List<Vector3> region4FoodPositions;
     public List<Transform> foodList;
+    public List<Transform> region2FoodList;
+    public List<Transform> region3FoodList;
+    public List<Transform> region4FoodList;
+    public int foodSpawned;
+    public int region2FoodSpawned;
+    public int region3FoodSpawned;
+    public int region4FoodSpawned;
     #endregion
 
     #region Upgrade Variables
@@ -114,14 +124,20 @@ public class GameMain : MonoBehaviour
     // This is an array of booleans with information about which region is active.
     public bool[] regionIsActive;
 
+    // Each region button has an image that highlights it is current. Only one image should be visible at a time.
+    // This array holds the images in the same sequence as the buttons.
+    public RawImage[] highlightImages;
+
     public int region2WorldSize;
+    public int region3WorldSize;
+    public int region4WorldSize;
 
     #endregion
 
     #region Main Variables
     public bool gameWon;
     public int worldSize;
-    public int foodSpawned;
+    
     public int gamePoints;
     public bool creaturesAwake = true;
     public bool gamePaused = false;
@@ -132,7 +148,7 @@ public class GameMain : MonoBehaviour
     public Animator planetAnimator;
     public Transform star1Body;
     public Animator starAnimator;
-    private int worldSizeLimit = 30;
+    private int worldSizeLimit = 20;
     public int researchPoints = 0;
     public int PeakPop = 0;
     //------------------------------------This code is used for debugging, remove before release.--------------------
@@ -243,6 +259,13 @@ public class GameMain : MonoBehaviour
         UGSlot3Image.enabled = false;
         UGSlot4Image.enabled = false;
 
+        for (int i = 0; i < highlightImages.Length; i++)
+        {
+            highlightImages[i].enabled = false;
+        }
+
+        highlightImages[0].enabled = true;
+
         #endregion
 
         #region Populate World
@@ -270,6 +293,9 @@ public class GameMain : MonoBehaviour
             foodPositions.RemoveAt(randPos);
             foodList.Add(f);
         }
+
+        // Display World Size.
+        worldSizeText.text = worldSize.ToString();
         #endregion
     }
 
@@ -378,8 +404,8 @@ public class GameMain : MonoBehaviour
         // Update panels.
         GameSpeedDisplayText.text = gameSpeed.ToString();
         gamePointsText.text = gamePoints.ToString();
-        worldSizeText.text = worldSize.ToString();
-        foodSpawnedText.text = foodSpawned.ToString();
+        //worldSizeText.text = worldSize.ToString();
+        //foodSpawnedText.text = foodSpawned.ToString();
         PlantEatersText.text = plantEaters.ToString();
         dayCountText.text = day.ToString();
 
@@ -510,6 +536,45 @@ public class GameMain : MonoBehaviour
                 f.localPosition = foodPositions[randPos];
                 foodPositions.RemoveAt(randPos);
                 foodList.Add(f);
+            }
+
+            int region2CurrentFoodAmount = region2FoodList.Count;
+            for (int i = region2CurrentFoodAmount; i < region2FoodSpawned; i++)
+            {
+                // Pick a random position.
+                int randPos = Random.Range(0, region2FoodPositions.Count);
+
+                // Place food at position and remove its position from the available list, then place the transform in the foodList. 
+                Transform f = Instantiate(food);
+                f.localPosition = region2FoodPositions[randPos];
+                region2FoodPositions.RemoveAt(randPos);
+                region2FoodList.Add(f);
+            }
+
+            int region3CurrentFoodAmount = region3FoodList.Count;
+            for (int i = region3CurrentFoodAmount; i < region3FoodSpawned; i++)
+            {
+                // Pick a random position.
+                int randPos = Random.Range(0, region3FoodPositions.Count);
+
+                // Place food at position and remove its position from the available list, then place the transform in the foodList. 
+                Transform f = Instantiate(food);
+                f.localPosition = region3FoodPositions[randPos];
+                region3FoodPositions.RemoveAt(randPos);
+                region3FoodList.Add(f);
+            }
+
+            int region4CurrentFoodAmount = region4FoodList.Count;
+            for (int i = region4CurrentFoodAmount; i < region4FoodSpawned; i++)
+            {
+                // Pick a random position.
+                int randPos = Random.Range(0, region4FoodPositions.Count);
+
+                // Place food at position and remove its position from the available list, then place the transform in the foodList. 
+                Transform f = Instantiate(food);
+                f.localPosition = region4FoodPositions[randPos];
+                region4FoodPositions.RemoveAt(randPos);
+                region4FoodList.Add(f);
             }
 
             // Increase the NoPlantEatersKilled by 1. This is used for the Ninja achievement.
@@ -804,11 +869,42 @@ public class GameMain : MonoBehaviour
 
     public void ClickFoodSpawned()
     {
-        if (gamePoints > 0 && foodPositions.Count > 0 && foodSpawned < worldSize * worldSize)
+        if (gamePoints > 0 && foodPositions.Count > 0 && foodSpawned < worldSize * worldSize && GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[0].enabled == true)
         {
             gamePoints -= 1;
             foodSpawned += 1;
+
+            // Updated Text.
+            foodSpawnedText.text = foodSpawned.ToString();
         }
+
+        else if(gamePoints > 0 && region2FoodPositions.Count > 0 && region2FoodSpawned < region2WorldSize * region2WorldSize && GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[1].enabled == true)
+        {
+            gamePoints -= 1;
+            region2FoodSpawned += 1;
+
+            // Update Text.
+            foodSpawnedText.text = region2FoodSpawned.ToString();
+        }
+
+        else if (gamePoints > 0 && region3FoodPositions.Count > 0 && region3FoodSpawned < region3WorldSize * region3WorldSize && GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[2].enabled == true)
+        {
+            gamePoints -= 1;
+            region3FoodSpawned += 1;
+
+            // Update Text.
+            foodSpawnedText.text = region3FoodSpawned.ToString();
+        }
+
+        else if (gamePoints > 0 && region4FoodPositions.Count > 0 && region4FoodSpawned < region4WorldSize * region4WorldSize && GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[3].enabled == true)
+        {
+            gamePoints -= 1;
+            region4FoodSpawned += 1;
+
+            // Update Text.
+            foodSpawnedText.text = region4FoodSpawned.ToString();
+        }
+
     }
 
     public void ClickWorldSize()
@@ -819,6 +915,7 @@ public class GameMain : MonoBehaviour
             worldSize += 1;
             GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateGrid();
             GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateCameraPos(0);
+            worldSizeText.text = worldSize.ToString();
         }
 
         else if (gamePoints > 0 && region2WorldSize < worldSizeLimit && GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[1].enabled == true)
@@ -827,6 +924,25 @@ public class GameMain : MonoBehaviour
             region2WorldSize += 1;
             GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateGridRegion2();
             GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateCameraPos(1);
+            worldSizeText.text = region2WorldSize.ToString();
+        }
+
+        else if (gamePoints > 0 && region3WorldSize < worldSizeLimit && GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[2].enabled == true)
+        {
+            gamePoints -= 1;
+            region3WorldSize += 1;
+            GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateGridRegion3();
+            GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateCameraPos(2);
+            worldSizeText.text = region3WorldSize.ToString();
+        }
+
+        else if (gamePoints > 0 && region4WorldSize < worldSizeLimit && GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[3].enabled == true)
+        {
+            gamePoints -= 1;
+            region4WorldSize += 1;
+            GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateGridRegion4();
+            GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateCameraPos(3);
+            worldSizeText.text = region4WorldSize.ToString();
         }
 
         // Check to see if the Land Owner achievement is unlocked.
@@ -1219,7 +1335,42 @@ public class GameMain : MonoBehaviour
         if (regionIsActive[regionNum])
         {
             GameObject.Find("Grid").GetComponent<CreateGrid>().UpdateRegionActive(regionNum);
+
+            // Select the correct Highlight image so the user knows which region they are on.
+            for (int i = 0; i < highlightImages.Length; i++)
+            {
+                highlightImages[i].enabled = false;
+            }
+
+            highlightImages[regionNum].enabled = true;
+
+            // Display Correct Information.
+            if (regionNum == 0)
+            {
+                worldSizeText.text = worldSize.ToString();
+                foodSpawnedText.text = foodSpawned.ToString();
+            }
+
+            else if (regionNum == 1)
+            {
+                worldSizeText.text = region2WorldSize.ToString();
+                foodSpawnedText.text = region2FoodSpawned.ToString();
+            }
+
+            else if (regionNum == 2)
+            {
+                worldSizeText.text = region3WorldSize.ToString();
+                foodSpawnedText.text = region3FoodSpawned.ToString();
+            }
+
+            else if (regionNum == 3)
+            {
+                worldSizeText.text = region4WorldSize.ToString();
+                foodSpawnedText.text = region4FoodSpawned.ToString();
+            }
         }
+
+        
 
     }
     #endregion

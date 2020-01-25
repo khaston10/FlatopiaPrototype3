@@ -1046,6 +1046,7 @@ MonoBehaviour:
   unlockedAchievement: 0
   gameWon: 0
   day: 1
+  peakPop: 0
 --- !u!4 &1058897868
 Transform:
   m_ObjectHideFlags: 0
