@@ -12,7 +12,7 @@ public class PlantEaterContoller : MonoBehaviour
     public int visionDistance;
     public bool isAwake;
 
-    private int direction = 0; // 0: Move y+, 1: Move y-, 2: Move x+, 3: Move x-
+    public int direction = 0; // 0: Move y+, 1: Move y-, 2: Move x+, 3: Move x-
     private float timer = 0.0f;
     private Animation anim;
     
@@ -73,6 +73,42 @@ public class PlantEaterContoller : MonoBehaviour
 
         }
 
+        for (int i = 0; i < GameObject.Find("Game").GetComponent<GameMain>().region2FoodList.Count; i++)
+        {
+            if (Vector3.Distance(transform.position, GameObject.Find("Game").GetComponent<GameMain>().region2FoodList[i].position) <= visionDistance)
+            {
+                // Save the food's position.
+                relativePos = GameObject.Find("Game").GetComponent<GameMain>().region2FoodList[i].position - transform.position;
+                relativePos.y = 0f;
+                direction = 4;
+            }
+
+        }
+
+        for (int i = 0; i < GameObject.Find("Game").GetComponent<GameMain>().region3FoodList.Count; i++)
+        {
+            if (Vector3.Distance(transform.position, GameObject.Find("Game").GetComponent<GameMain>().region3FoodList[i].position) <= visionDistance)
+            {
+                // Save the food's position.
+                relativePos = GameObject.Find("Game").GetComponent<GameMain>().region3FoodList[i].position - transform.position;
+                relativePos.y = 0f;
+                direction = 4;
+            }
+
+        }
+
+        for (int i = 0; i < GameObject.Find("Game").GetComponent<GameMain>().region4FoodList.Count; i++)
+        {
+            if (Vector3.Distance(transform.position, GameObject.Find("Game").GetComponent<GameMain>().region4FoodList[i].position) <= visionDistance)
+            {
+                // Save the food's position.
+                relativePos = GameObject.Find("Game").GetComponent<GameMain>().region4FoodList[i].position - transform.position;
+                relativePos.y = 0f;
+                direction = 4;
+            }
+
+        }
+
         // Pick random direction if it has not already been picked.
         if (direction != 4)
         {
@@ -81,10 +117,10 @@ public class PlantEaterContoller : MonoBehaviour
 
             direction = Random.Range(0, 4);
 
-            if (direction == 0) relativePos.x += 10;
-            else if (direction == 1) relativePos.x -= 10;
-            else if (direction == 2) relativePos.z += 10;
-            else if (direction == 3) relativePos.z -= 10;
+            if (direction == 0) relativePos.x += 100;
+            else if (direction == 1) relativePos.x -= 100;
+            else if (direction == 2) relativePos.z += 100;
+            else if (direction == 3) relativePos.z -= 100;
         }
         
         // Rotate the plant eater.

@@ -10,13 +10,22 @@ public class GameMain : MonoBehaviour
 
     #region Plant Eater Variables
     public int plantEaters;
+    public int plantEatersRegion2;
+    public int plantEatersRegion3;
+    public int plantEatersRegion4;
     public float plantEaterSpeed = .5f; // Set to .5 in normal speed and 2 for Fast Forward mode.
     public float caffeinePlantEaterSpeed = 1.5f; // Set to 1.5 in normal speed and 6 for Fast Forward mode.
     public int visionDistance = 5;
-    public int MeatEaterVisionDistanceLevel = 1; // This should max out at 5.
+    
     public List<Transform> plantEaterList;
+    public List<Transform> plantEaterListRegion2;
+    public List<Transform> plantEaterListRegion3;
+    public List<Transform> plantEaterListRegion4;
     public Transform plantEater;
     public List<Vector3> plantEaterStartPositions;
+    public List<Vector3> plantEaterStartPositionsRegion2;
+    public List<Vector3> plantEaterStartPositionsRegion3;
+    public List<Vector3> plantEaterStartPositionsRegion4;
     public int noPlantEatersKilledForXDays = 0;
     public Animation anim;
     #endregion
@@ -27,6 +36,7 @@ public class GameMain : MonoBehaviour
     public int meatEaterSpawnAmount = 2;
     public int daysUntilMeatEaterStarves;
     public int meaterEaterSpawnCounter = 0;
+    public int MeatEaterVisionDistanceLevel = 1; // This should max out at 5.
     public bool meatEatersSpawnDisabled = false; // This is used to temporaly disable meat eater spawn when user kills meat eaters.
     public float meatEaterSpeed = .5f; // Set to .5 in normal speed and 2 for Fast Forward mode. Then upped by .5 for each level.
     public int meatEaterSpeedLevel = 1; // This should max out at 5.
@@ -38,6 +48,9 @@ public class GameMain : MonoBehaviour
 
     #region Food Variables
     public Transform food;
+    public Transform foodRegion2;
+    public Transform foodRegion3;
+    public Transform foodRegion4;
     public List<Vector3> foodPositions;
     public List<Vector3> region2FoodPositions;
     public List<Vector3> region3FoodPositions;
@@ -148,6 +161,8 @@ public class GameMain : MonoBehaviour
     public Animator planetAnimator;
     public Transform star1Body;
     public Animator starAnimator;
+    public RawImage NightDayImage;
+    private Quaternion nightDayRot = new Quaternion(0f, 0f, .5f, 1f);
     private int worldSizeLimit = 20;
     public int researchPoints = 0;
     public int PeakPop = 0;
@@ -296,6 +311,8 @@ public class GameMain : MonoBehaviour
 
         // Display World Size.
         worldSizeText.text = worldSize.ToString();
+        PlantEatersText.text = plantEaters.ToString();
+        foodSpawnedText.text = foodSpawned.ToString();
         #endregion
     }
 
@@ -339,6 +356,42 @@ public class GameMain : MonoBehaviour
             Transform p = Instantiate(plantEater);
             p.localPosition = plantEaterStartPositions[randPos];
             plantEaterList.Add(p);
+
+        }
+
+        if (plantEaterListRegion2.Count < plantEatersRegion2 && plantEatersOn && creaturesAwake)
+        {
+            // Pick a random position.
+            int randPos = Random.Range(0, plantEaterStartPositionsRegion2.Count);
+
+            // Place plant eater at position, then place the transform in the plantEaterList. 
+            Transform p = Instantiate(plantEater);
+            p.localPosition = plantEaterStartPositionsRegion2[randPos];
+            plantEaterListRegion2.Add(p);
+
+        }
+
+        if (plantEaterListRegion3.Count < plantEatersRegion3 && plantEatersOn && creaturesAwake)
+        {
+            // Pick a random position.
+            int randPos = Random.Range(0, plantEaterStartPositionsRegion3.Count);
+
+            // Place plant eater at position, then place the transform in the plantEaterList. 
+            Transform p = Instantiate(plantEater);
+            p.localPosition = plantEaterStartPositionsRegion3[randPos];
+            plantEaterListRegion3.Add(p);
+
+        }
+
+        if (plantEaterListRegion4.Count < plantEatersRegion4 && plantEatersOn && creaturesAwake)
+        {
+            // Pick a random position.
+            int randPos = Random.Range(0, plantEaterStartPositionsRegion4.Count);
+
+            // Place plant eater at position, then place the transform in the plantEaterList. 
+            Transform p = Instantiate(plantEater);
+            p.localPosition = plantEaterStartPositionsRegion4[randPos];
+            plantEaterListRegion4.Add(p);
 
         }
 
@@ -404,9 +457,6 @@ public class GameMain : MonoBehaviour
         // Update panels.
         GameSpeedDisplayText.text = gameSpeed.ToString();
         gamePointsText.text = gamePoints.ToString();
-        //worldSizeText.text = worldSize.ToString();
-        //foodSpawnedText.text = foodSpawned.ToString();
-        PlantEatersText.text = plantEaters.ToString();
         dayCountText.text = day.ToString();
 
         // Update Upgrade Timers and set upgrades avaliable.
@@ -511,10 +561,15 @@ public class GameMain : MonoBehaviour
             planetAnimator.Play("StarSpin");
         }
 
+        // Rotate Night - Day Meter.
+        nightDayRot = new Quaternion(0, 0, (timerSpeedCoefficient * timer / lengthOfDay), 1f);
+        Debug.Log(timerSpeedCoefficient * timer / lengthOfDay);
+        NightDayImage.transform.rotation = nightDayRot;
 
 
-            // Move the source of light, star1.
-            yPos = worldSize * Mathf.Sin(timerSpeedCoefficient * timer);
+
+        // Move the source of light, star1.
+        yPos = worldSize * Mathf.Sin(timerSpeedCoefficient * timer);
         xPos = worldSize * Mathf.Cos(timerSpeedCoefficient * timer) + worldSize / 2;
         star1.transform.position = new Vector3(xPos, yPos, worldSize / 2);
         #endregion
@@ -528,12 +583,14 @@ public class GameMain : MonoBehaviour
             int currentFoodAmount = foodList.Count;
             for (int i = currentFoodAmount; i < foodSpawned; i++ )
             {
-                // Pick a random position.
+                // Pick a random position and random rotation.
                 int randPos = Random.Range(0, foodPositions.Count);
+                int randRot = Random.Range(0, 360);
 
                 // Place food at position and remove its position from the available list, then place the transform in the foodList. 
                 Transform f = Instantiate(food);
                 f.localPosition = foodPositions[randPos];
+                f.Rotate(0, randRot, 0);
                 foodPositions.RemoveAt(randPos);
                 foodList.Add(f);
             }
@@ -543,12 +600,17 @@ public class GameMain : MonoBehaviour
             {
                 // Pick a random position.
                 int randPos = Random.Range(0, region2FoodPositions.Count);
+                int randRot = Random.Range(0, 360);
 
                 // Place food at position and remove its position from the available list, then place the transform in the foodList. 
-                Transform f = Instantiate(food);
+                Transform f = Instantiate(foodRegion2);
                 f.localPosition = region2FoodPositions[randPos];
+                f.Rotate(0, randRot, 0);
                 region2FoodPositions.RemoveAt(randPos);
                 region2FoodList.Add(f);
+
+                // Set the variable regionAssigned, so that the game knows the plant is located in region2.
+                f.GetComponent<FoodController>().regionAssigned = 1;
             }
 
             int region3CurrentFoodAmount = region3FoodList.Count;
@@ -556,12 +618,17 @@ public class GameMain : MonoBehaviour
             {
                 // Pick a random position.
                 int randPos = Random.Range(0, region3FoodPositions.Count);
+                int randRot = Random.Range(0, 360);
 
                 // Place food at position and remove its position from the available list, then place the transform in the foodList. 
-                Transform f = Instantiate(food);
+                Transform f = Instantiate(foodRegion3);
                 f.localPosition = region3FoodPositions[randPos];
+                f.Rotate(0, randRot, 0);
                 region3FoodPositions.RemoveAt(randPos);
                 region3FoodList.Add(f);
+
+                // Set the variable regionAssigned, so that the game knows the plant is located in region2.
+                f.GetComponent<FoodController>().regionAssigned = 2;
             }
 
             int region4CurrentFoodAmount = region4FoodList.Count;
@@ -569,12 +636,17 @@ public class GameMain : MonoBehaviour
             {
                 // Pick a random position.
                 int randPos = Random.Range(0, region4FoodPositions.Count);
+                int randRot = Random.Range(0, 360);
 
                 // Place food at position and remove its position from the available list, then place the transform in the foodList. 
-                Transform f = Instantiate(food);
+                Transform f = Instantiate(foodRegion4);
                 f.localPosition = region4FoodPositions[randPos];
+                f.Rotate(0, randRot, 0);
                 region4FoodPositions.RemoveAt(randPos);
                 region4FoodList.Add(f);
+
+                // Set the variable regionAssigned, so that the game knows the plant is located in region2.
+                f.GetComponent<FoodController>().regionAssigned = 3;
             }
 
             // Increase the NoPlantEatersKilled by 1. This is used for the Ninja achievement.
@@ -602,6 +674,69 @@ public class GameMain : MonoBehaviour
                 }
             }
 
+            for (int i = plantEaterListRegion2.Count - 1; i >= 0; i--)
+            {
+                if (plantEaterListRegion2[i].GetComponent<PlantEaterContoller>().foodEaten == 0)
+                {
+                    AudioSource.PlayClipAtPoint(plantEaterDie, transform.position);
+
+                    Destroy(plantEaterListRegion2[i].gameObject);
+                    plantEaterListRegion2.RemoveAt(i);
+                    plantEatersRegion2 -= 1;
+                }
+
+                // Check to see if the Gluton Achievement has been unlocked.
+                else if (plantEaterListRegion2[i].GetComponent<PlantEaterContoller>().foodEaten >= 5 && glutonAchievement == false)
+                {
+                    AudioSource.PlayClipAtPoint(achievementUnlocked, transform.position);
+                    glutonImage.color = Color.white;
+                    glutonImage.texture = glutonTexture;
+                    glutonAchievement = true;
+                }
+            }
+
+            for (int i = plantEaterListRegion3.Count - 1; i >= 0; i--)
+            {
+                if (plantEaterListRegion3[i].GetComponent<PlantEaterContoller>().foodEaten == 0)
+                {
+                    AudioSource.PlayClipAtPoint(plantEaterDie, transform.position);
+
+                    Destroy(plantEaterListRegion3[i].gameObject);
+                    plantEaterListRegion3.RemoveAt(i);
+                    plantEatersRegion3 -= 1;
+                }
+
+                // Check to see if the Gluton Achievement has been unlocked.
+                else if (plantEaterListRegion3[i].GetComponent<PlantEaterContoller>().foodEaten >= 5 && glutonAchievement == false)
+                {
+                    AudioSource.PlayClipAtPoint(achievementUnlocked, transform.position);
+                    glutonImage.color = Color.white;
+                    glutonImage.texture = glutonTexture;
+                    glutonAchievement = true;
+                }
+            }
+
+            for (int i = plantEaterListRegion4.Count - 1; i >= 0; i--)
+            {
+                if (plantEaterListRegion4[i].GetComponent<PlantEaterContoller>().foodEaten == 0)
+                {
+                    AudioSource.PlayClipAtPoint(plantEaterDie, transform.position);
+
+                    Destroy(plantEaterListRegion4[i].gameObject);
+                    plantEaterListRegion4.RemoveAt(i);
+                    plantEatersRegion4 -= 1;
+                }
+
+                // Check to see if the Gluton Achievement has been unlocked.
+                else if (plantEaterListRegion4[i].GetComponent<PlantEaterContoller>().foodEaten >= 5 && glutonAchievement == false)
+                {
+                    AudioSource.PlayClipAtPoint(achievementUnlocked, transform.position);
+                    glutonImage.color = Color.white;
+                    glutonImage.texture = glutonTexture;
+                    glutonAchievement = true;
+                }
+            }
+
             // Check through the list of meat eaters and destroy meat eaters that did not survive.
             for (int i = meatEaterList.Count - 1; i >= 0; i--)
             {
@@ -619,6 +754,21 @@ public class GameMain : MonoBehaviour
             for (int i = 0; i < plantEaterList.Count; i++)
             {
                 plantEaterList[i].GetComponent<PlantEaterContoller>().foodEaten = 0;
+            }
+
+            for (int i = 0; i < plantEaterListRegion2.Count; i++)
+            {
+                plantEaterListRegion2[i].GetComponent<PlantEaterContoller>().foodEaten = 0;
+            }
+
+            for (int i = 0; i < plantEaterListRegion3.Count; i++)
+            {
+                plantEaterListRegion3[i].GetComponent<PlantEaterContoller>().foodEaten = 0;
+            }
+
+            for (int i = 0; i < plantEaterListRegion4.Count; i++)
+            {
+                plantEaterListRegion4[i].GetComponent<PlantEaterContoller>().foodEaten = 0;
             }
 
             // Add 1 days to meat eaters starve counter.
@@ -668,7 +818,30 @@ public class GameMain : MonoBehaviour
                 {
                     plantEaterList[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = starvingPlantEater;
                 }
+            }
 
+            for (int i = 0; i < plantEaterListRegion2.Count; i++)
+            {
+                if (plantEaterListRegion2[i].GetComponent<PlantEaterContoller>().foodEaten == 0)
+                {
+                    plantEaterListRegion2[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = starvingPlantEater;
+                }
+            }
+
+            for (int i = 0; i < plantEaterListRegion3.Count; i++)
+            {
+                if (plantEaterListRegion3[i].GetComponent<PlantEaterContoller>().foodEaten == 0)
+                {
+                    plantEaterListRegion3[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = starvingPlantEater;
+                }
+            }
+
+            for (int i = 0; i < plantEaterListRegion4.Count; i++)
+            {
+                if (plantEaterListRegion4[i].GetComponent<PlantEaterContoller>().foodEaten == 0)
+                {
+                    plantEaterListRegion4[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = starvingPlantEater;
+                }
             }
 
             for (int i = 0; i < meatEaterList.Count; i++)
@@ -708,7 +881,7 @@ public class GameMain : MonoBehaviour
             }
 
             // Check to see if the game is over.
-            if (plantEaters == 0)
+            if (plantEaters == 0 && plantEatersRegion2 == 0 && plantEatersRegion3 == 0 && plantEatersRegion4 == 0)
             {
                 SaveData();
                 SceneManager.LoadScene(sceneName: "EndScreen");
@@ -959,17 +1132,47 @@ public class GameMain : MonoBehaviour
 
     public void ClickPlantEaters()
     {
-        if (gamePoints > 0)
+        if (gamePoints > 0 && GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[0].enabled == true)
         {
             gamePoints -= 1;
             plantEaters += 1;
 
-            // Check to see if new Peak Population has been reached.
-            if (plantEaters > PeakPop)
-            {
-                PeakPop = plantEaters;
-                peakPopText.text = PeakPop.ToString();
-            }
+            // Update the text on the GUI
+            PlantEatersText.text = plantEaters.ToString();
+        }
+
+        else if (gamePoints > 0 && GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[1].enabled == true)
+        {
+            gamePoints -= 1;
+            plantEatersRegion2 += 1;
+
+            // Update the text on the GUI
+            PlantEatersText.text = plantEatersRegion2.ToString();
+        }
+
+        else if (gamePoints > 0 && GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[2].enabled == true)
+        {
+            gamePoints -= 1;
+            plantEatersRegion3 += 1;
+
+            // Update the text on the GUI
+            PlantEatersText.text = plantEatersRegion3.ToString();
+        }
+
+        else if (gamePoints > 0 && GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[3].enabled == true)
+        {
+            gamePoints -= 1;
+            plantEatersRegion4 += 1;
+
+            // Update the text on the GUI
+            PlantEatersText.text = plantEatersRegion4.ToString();
+        }
+
+        // Check to see if new Peak Population has been reached.
+        if (plantEaters + plantEatersRegion2 + plantEatersRegion3 + plantEatersRegion4 > PeakPop)
+        {
+            PeakPop = plantEaters + plantEatersRegion2 + plantEatersRegion3 + plantEatersRegion4;
+            peakPopText.text = PeakPop.ToString();
         }
     }
 
@@ -1034,13 +1237,46 @@ public class GameMain : MonoBehaviour
         {
             AudioSource.PlayClipAtPoint(buttonDoesNotWork, Vector3.zero);
 
-
-            // Feed all plant eaters and change their skin color.
-            for (int i = 0; i < plantEaterList.Count; i++)
+            if (GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[0].enabled == true)
             {
-                plantEaterList[i].GetComponent<PlantEaterContoller>().foodEaten += 1;
-                plantEaterList[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = FedPlantEater;
+                // Feed all plant eaters and change their skin color.
+                for (int i = 0; i < plantEaterList.Count; i++)
+                {
+                    plantEaterList[i].GetComponent<PlantEaterContoller>().foodEaten += 1;
+                    plantEaterList[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = FedPlantEater;
+                }
             }
+
+            else if (GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[1].enabled == true)
+            {
+                // Feed all plant eaters and change their skin color.
+                for (int i = 0; i < plantEaterListRegion2.Count; i++)
+                {
+                    plantEaterListRegion2[i].GetComponent<PlantEaterContoller>().foodEaten += 1;
+                    plantEaterListRegion2[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = FedPlantEater;
+                }
+            }
+
+            else if (GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[2].enabled == true)
+            {
+                // Feed all plant eaters and change their skin color.
+                for (int i = 0; i < plantEaterListRegion3.Count; i++)
+                {
+                    plantEaterListRegion3[i].GetComponent<PlantEaterContoller>().foodEaten += 1;
+                    plantEaterListRegion3[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = FedPlantEater;
+                }
+            }
+
+            else if (GameObject.Find("Grid").GetComponent<CreateGrid>().cameras[3].enabled == true)
+            {
+                // Feed all plant eaters and change their skin color.
+                for (int i = 0; i < plantEaterListRegion4.Count; i++)
+                {
+                    plantEaterListRegion4[i].GetComponent<PlantEaterContoller>().foodEaten += 1;
+                    plantEaterListRegion4[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = FedPlantEater;
+                }
+            }
+
 
             //Reset Timer.
             feedTimer = 0;
@@ -1091,6 +1327,21 @@ public class GameMain : MonoBehaviour
         {
             plantEaterList[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = color;
         }
+
+        for (int i = 0; i < plantEaterListRegion2.Count; i++)
+        {
+            plantEaterListRegion2[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = color;
+        }
+
+        for (int i = 0; i < plantEaterListRegion3.Count; i++)
+        {
+            plantEaterListRegion3[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = color;
+        }
+
+        for (int i = 0; i < plantEaterListRegion4.Count; i++)
+        {
+            plantEaterListRegion4[i].GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = color;
+        }
     }
 
     public void ChangeMeatEaterSkin(Color color)
@@ -1110,6 +1361,24 @@ public class GameMain : MonoBehaviour
                 plantEaterList[i].GetComponent<PlantEaterContoller>().isAwake = false;
                 plantEaterList[i].GetChild(0).GetComponent<Animation>().Play("idle");
             }
+
+            for (int i = 0; i < plantEaterListRegion2.Count; i++)
+            {
+                plantEaterListRegion2[i].GetComponent<PlantEaterContoller>().isAwake = false;
+                plantEaterListRegion2[i].GetChild(0).GetComponent<Animation>().Play("idle");
+            }
+
+            for (int i = 0; i < plantEaterListRegion3.Count; i++)
+            {
+                plantEaterListRegion3[i].GetComponent<PlantEaterContoller>().isAwake = false;
+                plantEaterListRegion3[i].GetChild(0).GetComponent<Animation>().Play("idle");
+            }
+
+            for (int i = 0; i < plantEaterListRegion4.Count; i++)
+            {
+                plantEaterListRegion4[i].GetComponent<PlantEaterContoller>().isAwake = false;
+                plantEaterListRegion4[i].GetChild(0).GetComponent<Animation>().Play("idle");
+            }
         }
 
         else if (animationName == "walk")
@@ -1120,6 +1389,30 @@ public class GameMain : MonoBehaviour
                 anim[animationName].speed = 2;
                 plantEaterList[i].GetComponent<PlantEaterContoller>().isAwake = true;
                 plantEaterList[i].GetChild(0).GetComponent<Animation>().Play("walk");
+            }
+
+            for (int i = 0; i < plantEaterListRegion2.Count; i++)
+            {
+                anim = plantEaterListRegion2[i].GetChild(0).GetComponent<Animation>();
+                anim[animationName].speed = 2;
+                plantEaterListRegion2[i].GetComponent<PlantEaterContoller>().isAwake = true;
+                plantEaterListRegion2[i].GetChild(0).GetComponent<Animation>().Play("walk");
+            }
+
+            for (int i = 0; i < plantEaterListRegion3.Count; i++)
+            {
+                anim = plantEaterListRegion3[i].GetChild(0).GetComponent<Animation>();
+                anim[animationName].speed = 2;
+                plantEaterListRegion3[i].GetComponent<PlantEaterContoller>().isAwake = true;
+                plantEaterListRegion3[i].GetChild(0).GetComponent<Animation>().Play("walk");
+            }
+
+            for (int i = 0; i < plantEaterListRegion4.Count; i++)
+            {
+                anim = plantEaterListRegion4[i].GetChild(0).GetComponent<Animation>();
+                anim[animationName].speed = 2;
+                plantEaterListRegion4[i].GetComponent<PlantEaterContoller>().isAwake = true;
+                plantEaterListRegion4[i].GetChild(0).GetComponent<Animation>().Play("walk");
             }
         }
         
@@ -1202,7 +1495,7 @@ public class GameMain : MonoBehaviour
                 freezeTimer = 0;
                 ChangeButtonColor(UGSlots[0], GreyTrans);
             }
-            else if(UGSlotsActive[0] == 2 && UGFeedIsAvailable && creaturesAwake)
+            else if(UGSlotsActive[0] == 2 && UGFeedIsAvailable)
             {
                 ClickFeedUpgrade();
                 UGFeedIsAvailable = false;
@@ -1234,7 +1527,7 @@ public class GameMain : MonoBehaviour
                 freezeTimer = 0;
                 ChangeButtonColor(UGSlots[1], GreyTrans);
             }
-            else if (UGSlotsActive[1] == 2 && UGFeedIsAvailable && creaturesAwake)
+            else if (UGSlotsActive[1] == 2 && UGFeedIsAvailable)
             {
                 ClickFeedUpgrade();
                 ClickFeedUpgrade();
@@ -1268,7 +1561,7 @@ public class GameMain : MonoBehaviour
                 freezeTimer = 0;
                 ChangeButtonColor(UGSlots[2], GreyTrans);
             }
-            else if (UGSlotsActive[2] == 2 && UGFeedIsAvailable && creaturesAwake)
+            else if (UGSlotsActive[2] == 2 && UGFeedIsAvailable)
             {
                 ClickFeedUpgrade();
                 ClickFeedUpgrade();
@@ -1302,7 +1595,7 @@ public class GameMain : MonoBehaviour
                 freezeTimer = 0;
                 ChangeButtonColor(UGSlots[3], GreyTrans);
             }
-            else if (UGSlotsActive[3] == 2 && UGFeedIsAvailable && creaturesAwake)
+            else if (UGSlotsActive[3] == 2 && UGFeedIsAvailable)
             {
                 ClickFeedUpgrade();
                 ClickFeedUpgrade();
@@ -1349,24 +1642,28 @@ public class GameMain : MonoBehaviour
             {
                 worldSizeText.text = worldSize.ToString();
                 foodSpawnedText.text = foodSpawned.ToString();
+                PlantEatersText.text = plantEaters.ToString();
             }
 
             else if (regionNum == 1)
             {
                 worldSizeText.text = region2WorldSize.ToString();
                 foodSpawnedText.text = region2FoodSpawned.ToString();
+                PlantEatersText.text = plantEatersRegion2.ToString();
             }
 
             else if (regionNum == 2)
             {
                 worldSizeText.text = region3WorldSize.ToString();
                 foodSpawnedText.text = region3FoodSpawned.ToString();
+                PlantEatersText.text = plantEatersRegion3.ToString();
             }
 
             else if (regionNum == 3)
             {
                 worldSizeText.text = region4WorldSize.ToString();
                 foodSpawnedText.text = region4FoodSpawned.ToString();
+                PlantEatersText.text = plantEatersRegion4.ToString();
             }
         }
 

@@ -170,7 +170,7 @@ public class CreateGrid : MonoBehaviour
             for (int j = GameObject.Find("Game").GetComponent<GameMain>().worldSize - 1; j < GameObject.Find("Game").GetComponent<GameMain>().worldSize; j++)
             {
                 Vector3 foodPos = new Vector3(i, 1.0f, j);
-                Vector3 plantEaterPos = new Vector3(i, 1.4f, j);
+                Vector3 plantEaterPos = new Vector3(i, 1.1f, j);
                 positions.Add(foodPos);
                 GameObject.Find("Game").GetComponent<GameMain>().foodPositions.Add(foodPos);
                 GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositions.Add(plantEaterPos);
@@ -218,10 +218,10 @@ public class CreateGrid : MonoBehaviour
             for (int j = GameObject.Find("Game").GetComponent<GameMain>().region2WorldSize - 1; j < GameObject.Find("Game").GetComponent<GameMain>().region2WorldSize; j++)
             {
                 Vector3 foodPos = new Vector3(i, 1.0f, j + 40);
-                //Vector3 plantEaterPos = new Vector3(i, 1.4f, j);
+                Vector3 plantEaterPos = new Vector3(i, 1.1f, j + 40);
                 region2Positions.Add(foodPos);
                 GameObject.Find("Game").GetComponent<GameMain>().region2FoodPositions.Add(foodPos);
-                //GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositions.Add(plantEaterPos);
+                GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositionsRegion2.Add(plantEaterPos);
             }
         }
         for (int i = GameObject.Find("Game").GetComponent<GameMain>().region2WorldSize - 1; i < GameObject.Find("Game").GetComponent<GameMain>().region2WorldSize; i++)
@@ -229,10 +229,10 @@ public class CreateGrid : MonoBehaviour
             for (int j = 0; j < GameObject.Find("Game").GetComponent<GameMain>().region2WorldSize; j++)
             {
                 Vector3 foodPos = new Vector3(i, 1.0f, j + 40);
-                //Vector3 plantEaterPos = new Vector3(i, 1.4f, j);
+                Vector3 plantEaterPos = new Vector3(i, 1.1f, j + 40);
                 region2Positions.Add(foodPos);
                 GameObject.Find("Game").GetComponent<GameMain>().region2FoodPositions.Add(foodPos);
-                //GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositions.Add(plantEaterPos);
+                GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositionsRegion2.Add(plantEaterPos);
             }
         }
 
@@ -267,10 +267,10 @@ public class CreateGrid : MonoBehaviour
             for (int j = GameObject.Find("Game").GetComponent<GameMain>().region3WorldSize - 1; j < GameObject.Find("Game").GetComponent<GameMain>().region3WorldSize; j++)
             {
                 Vector3 foodPos = new Vector3(i + 40, 1.0f, j);
-                //Vector3 plantEaterPos = new Vector3(i, 1.4f, j);
+                Vector3 plantEaterPos = new Vector3(i + 40, 1.1f, j);
                 region3Positions.Add(foodPos);
                 GameObject.Find("Game").GetComponent<GameMain>().region3FoodPositions.Add(foodPos);
-                //GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositions.Add(plantEaterPos);
+                GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositionsRegion3.Add(plantEaterPos);
             }
         }
         for (int i = GameObject.Find("Game").GetComponent<GameMain>().region3WorldSize - 1; i < GameObject.Find("Game").GetComponent<GameMain>().region3WorldSize; i++)
@@ -278,10 +278,10 @@ public class CreateGrid : MonoBehaviour
             for (int j = 0; j < GameObject.Find("Game").GetComponent<GameMain>().region3WorldSize; j++)
             {
                 Vector3 foodPos = new Vector3(i + 40, 1.0f, j);
-                //Vector3 plantEaterPos = new Vector3(i, 1.4f, j);
+                Vector3 plantEaterPos = new Vector3(i + 40, 1.1f, j);
                 region3Positions.Add(foodPos);
                 GameObject.Find("Game").GetComponent<GameMain>().region3FoodPositions.Add(foodPos);
-                //GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositions.Add(plantEaterPos);
+                GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositionsRegion3.Add(plantEaterPos);
             }
         }
 
@@ -315,10 +315,10 @@ public class CreateGrid : MonoBehaviour
             for (int j = GameObject.Find("Game").GetComponent<GameMain>().region4WorldSize - 1; j < GameObject.Find("Game").GetComponent<GameMain>().region4WorldSize; j++)
             {
                 Vector3 foodPos = new Vector3(i + 40, 1.0f, j + 40);
-                //Vector3 plantEaterPos = new Vector3(i, 1.4f, j);
+                Vector3 plantEaterPos = new Vector3(i + 40, 1.1f, j + 40);
                 region4Positions.Add(foodPos);
                 GameObject.Find("Game").GetComponent<GameMain>().region4FoodPositions.Add(foodPos);
-                //GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositions.Add(plantEaterPos);
+                GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositionsRegion4.Add(plantEaterPos);
             }
         }
         for (int i = GameObject.Find("Game").GetComponent<GameMain>().region4WorldSize - 1; i < GameObject.Find("Game").GetComponent<GameMain>().region4WorldSize; i++)
@@ -326,10 +326,10 @@ public class CreateGrid : MonoBehaviour
             for (int j = 0; j < GameObject.Find("Game").GetComponent<GameMain>().region4WorldSize; j++)
             {
                 Vector3 foodPos = new Vector3(i + 40, 1.0f, j + 40);
-                //Vector3 plantEaterPos = new Vector3(i, 1.4f, j);
+                Vector3 plantEaterPos = new Vector3(i + 40, 1.1f, j + 40);
                 region4Positions.Add(foodPos);
                 GameObject.Find("Game").GetComponent<GameMain>().region4FoodPositions.Add(foodPos);
-                //GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositions.Add(plantEaterPos);
+                GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositionsRegion4.Add(plantEaterPos);
             }
         }
 
@@ -432,10 +432,14 @@ public class CreateGrid : MonoBehaviour
                 for (int j = 0; j < GameObject.Find("Game").GetComponent<GameMain>().region2WorldSize; j++)
                 {
                     Vector3 pos = new Vector3(i, 1.0f, 40 + j);
+                    Vector3 plantEaterPos = new Vector3(i, 1.1f, j + 40);
                     region2Positions.Add(pos);
+
+
 
                     // Add position to the regions food list.
                     GameObject.Find("Game").GetComponent<GameMain>().region2FoodPositions.Add(pos);
+                    GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositionsRegion2.Add(plantEaterPos);
                 }
             }
 
@@ -472,10 +476,12 @@ public class CreateGrid : MonoBehaviour
                 for (int j = 0; j < GameObject.Find("Game").GetComponent<GameMain>().region3WorldSize; j++)
                 {
                     Vector3 pos = new Vector3(i + 40, 1.0f, j);
+                    Vector3 plantEaterPos = new Vector3(i + 40, 1.1f, j);
                     region3Positions.Add(pos);
 
                     // Add position to the regions food list.
                     GameObject.Find("Game").GetComponent<GameMain>().region3FoodPositions.Add(pos);
+                    GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositionsRegion3.Add(plantEaterPos);
                 }
             }
 
@@ -512,10 +518,12 @@ public class CreateGrid : MonoBehaviour
                 for (int j = 0; j < GameObject.Find("Game").GetComponent<GameMain>().region4WorldSize; j++)
                 {
                     Vector3 pos = new Vector3(i + 40, 1.0f, j + 40);
+                    Vector3 plantEaterPos = new Vector3(i + 40, 1.1f, j + 40);
                     region4Positions.Add(pos);
 
                     // Add position to the regions food list.
                     GameObject.Find("Game").GetComponent<GameMain>().region4FoodPositions.Add(pos);
+                    GameObject.Find("Game").GetComponent<GameMain>().plantEaterStartPositionsRegion4.Add(plantEaterPos);
                 }
             }
 

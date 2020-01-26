@@ -1037,7 +1037,7 @@ MonoBehaviour:
   worldSize: 5
   foodSpawned: 1
   plantEaters: 1
-  gamePoints: 50
+  gamePoints: 500
   landOwnerAchievement: 0
   genocideAchievement: 0
   ninjaAchievement: 0
