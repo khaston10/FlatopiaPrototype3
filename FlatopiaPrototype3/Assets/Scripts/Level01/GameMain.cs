@@ -31,19 +31,24 @@ public class GameMain : MonoBehaviour
     #endregion
 
     #region Meat Eater Variables
+    public Transform meatEater;
+    public List<Transform> meatEaterList;
+
     public int meatEaters;
     public int daysBetweenMeatEaterSpawn;
-    public int meatEaterSpawnAmount = 2;
-    public int daysUntilMeatEaterStarves;
     public int meaterEaterSpawnCounter = 0;
-    public int MeatEaterVisionDistanceLevel = 1; // This should max out at 5.
     public bool meatEatersSpawnDisabled = false; // This is used to temporaly disable meat eater spawn when user kills meat eaters.
+    private int daysUntilMeatEaterCounter;
+    
+    // These variables are subject to upgrades during the game and will be displayed on the Stats Panel.
+    public int daysUntilMeatEaterStarves;
+    public int meatEaterSpawnAmount = 2;
+    public int MeatEaterVisionDistanceLevel = 1; // This should max out at 5.
     public float meatEaterSpeed = .5f; // Set to .5 in normal speed and 2 for Fast Forward mode. Then upped by .5 for each level.
     public int meatEaterSpeedLevel = 1; // This should max out at 5.
-    private int daysUntilMeatEaterCounter;
-    public Transform meatEater;
+
     private int randomMeatEaterUpgrade = 0;
-    public List<Transform> meatEaterList;
+
     #endregion
 
     #region Food Variables
@@ -209,6 +214,10 @@ public class GameMain : MonoBehaviour
     public Text daysUntilMeatEatersText;
     public Text researchPointsText;
     public Text peakPopText;
+    public Text meatEaterWorldPopText;
+    public Text meatEaterSpeedText;
+    public Text meatEaterVisionText;
+    public Text meatEatersSpawnsPerWaveText;
 
     #endregion
 
@@ -309,12 +318,19 @@ public class GameMain : MonoBehaviour
             foodList.Add(f);
         }
 
-        // Display World Size.
+        // Display Text Objects.
         worldSizeText.text = worldSize.ToString();
         PlantEatersText.text = plantEaters.ToString();
         foodSpawnedText.text = foodSpawned.ToString();
-        #endregion
-    }
+        meatEaterWorldPopText.text = meatEaterList.Count.ToString();
+        meatEaterSpeedText.text = meatEaterSpeed.ToString();
+        meatEaterVisionText.text = MeatEaterVisionDistanceLevel.ToString();
+        meatEatersSpawnsPerWaveText.text = meatEaterSpawnAmount.ToString();
+
+
+
+    #endregion
+}
 
     // Update is called once per frame
     void Update()
@@ -401,7 +417,9 @@ public class GameMain : MonoBehaviour
             // Pick a random upgrade.
             if (day > 6)
             {
+                // THis returns a value of 0, 1, or 2. 0: No Change to MeatEaters, 1: Upgrade Meat Eaters Speed, 2: Upgrade Meat Eaters Vision.
                 randomMeatEaterUpgrade = Random.Range(0, 3);
+                Debug.Log("Upgrade Value: " + randomMeatEaterUpgrade.ToString());
             }
             
             if (randomMeatEaterUpgrade == 1 && meatEaterSpeedLevel < 5)
@@ -409,6 +427,10 @@ public class GameMain : MonoBehaviour
                 // Upgrade Speed.
                 meatEaterSpeedLevel += 1;
                 GameObject.Find("Canvas").GetComponent<StoryTeller>().MeatEatersUpgradeSpeed = true;
+
+                // Update Text on GUI.
+                meatEaterSpeedText.text = meatEaterSpeedLevel.ToString();
+
             }
 
             else if (randomMeatEaterUpgrade == 2 && MeatEaterVisionDistanceLevel < 5)
@@ -417,6 +439,9 @@ public class GameMain : MonoBehaviour
                 MeatEaterVisionDistanceLevel += 1;
                 visionDistance += 3;
                 GameObject.Find("Canvas").GetComponent<StoryTeller>().MeatEatersUpgradeVision = true;
+
+                // Update Text on GUI.
+                meatEaterVisionText.text = MeatEaterVisionDistanceLevel.ToString();
             }
 
             for (int i = 0; i < meatEaterSpawnAmount; i++)
@@ -429,11 +454,16 @@ public class GameMain : MonoBehaviour
                 m.localPosition = plantEaterStartPositions[randPos];
                 meatEaterList.Add(m);
 
-                meatEaters += 1;
-
+                meatEaters += 1;            
             }
             meatEatersSpawnDisabled = true;
             meatEaterSpawnAmount += 1;
+
+            // Update Text on GUI.
+            meatEatersSpawnsPerWaveText.text = meatEaterSpawnAmount.ToString();
+
+            // Slow the game to a normal speed - This re calculates Meat Eater Speed.
+            ClickForward();
         }
 
         else if (meaterEaterSpawnCounter > daysBetweenMeatEaterSpawn)
@@ -454,10 +484,11 @@ public class GameMain : MonoBehaviour
         }
 
 
-        // Update panels.
+        // Update panels - Need to revise, this wastes time.
         GameSpeedDisplayText.text = gameSpeed.ToString();
         gamePointsText.text = gamePoints.ToString();
         dayCountText.text = day.ToString();
+        meatEaterWorldPopText.text = meatEaterList.Count.ToString();
 
         // Update Upgrade Timers and set upgrades avaliable.
         if (UGSlayerIsAvailable == false && slayerTimer > slayerTimerReset)
@@ -562,10 +593,11 @@ public class GameMain : MonoBehaviour
         }
 
         // Rotate Night - Day Meter.
-        nightDayRot = new Quaternion(0, 0, (timerSpeedCoefficient * timer / lengthOfDay), 1f);
-        Debug.Log(timerSpeedCoefficient * timer / lengthOfDay);
-        NightDayImage.transform.rotation = nightDayRot;
-
+        if (gamePaused == false)
+        {
+            NightDayImage.transform.rotation = Quaternion.Euler(0f, 0f, (57.28f * timerSpeedCoefficient * timer));
+            Debug.Log((57.28f * timerSpeedCoefficient * timer));
+        }
 
 
         // Move the source of light, star1.
@@ -1289,7 +1321,7 @@ public class GameMain : MonoBehaviour
 
     public void ClickCaffeineUpgrade()
     {
-        if (caffeineUpgradeUnlocked && caffeineTimer > caffeineTimerReset)
+        if (caffeineUpgradeUnlocked && caffeineTimer > caffeineTimerReset && gamePoints > 0)
         {
             AudioSource.PlayClipAtPoint(buttonDoesNotWork, Vector3.zero);
 
